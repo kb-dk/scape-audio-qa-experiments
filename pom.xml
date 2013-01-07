@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- TODO -->
+
+    <parent>
+        <groupId>dk.statsbiblioteket.sbprojects</groupId>
+        <artifactId>sbprojects-parent</artifactId>
+        <version>3</version>
+    </parent>
+
+    <groupId>scape</groupId>
+    <artifactId>scape-audio-qa</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <youseeDownloader.version>1.0</youseeDownloader.version>
+        <downloadInitiator.version>0.4.0-SNAPSHOT</downloadInitiator.version>
+        <bitrepoClient.version>0.2</bitrepoClient.version>
+        <profileValidator.version>0.2</profileValidator.version>
+        <domsClient.version>0.1.0-SNAPSHOT</domsClient.version>
+        <digiTVingester.version>0.1.0-SNAPSHOT</digiTVingester.version>
+    </properties>
+
+
+    <modules>
+        <module>workflows</module>
+    </modules>
+
+
+
+    <scm>
+        <connection>scm:git:git://github.com/bolettejurik/scape-audio-qa.git</connection>
+        <url>scm:git:git://github.com/bolettejurik:scape-audio-qa.git</url>
+        <developerConnection>scm:git:git://github.com/bolettejurik/scape-audio-qa.git</developerConnection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>sbprojects-nexus</id>
+            <url>https://sbprojects.statsbiblioteket.dk/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>
