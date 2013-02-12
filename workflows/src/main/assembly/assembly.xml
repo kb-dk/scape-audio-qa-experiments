@@ -1,0 +1,105 @@
+<assembly>
+
+    <id>bundle</id>
+
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <!--<includeBaseDirectory>false</includeBaseDirectory>-->
+
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>${dependencies.dir}</outputDirectory>
+            <directoryMode>0755</directoryMode>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+            <includes>
+                <include>com.googlecode.json-simple:json-simple</include>
+            </includes>
+            <scope>runtime</scope>
+        </dependencySet>
+
+        <!--
+
+
+                <dependencySet>
+                    <useProjectArtifact>false</useProjectArtifact>
+                    <outputDirectory>${yousee.components.dir}/${yousee.bibliographic.metadata.validator}/external-products</outputDirectory>
+                    <directoryMode>0755</directoryMode>
+                    <useTransitiveDependencies>false</useTransitiveDependencies>
+                    <unpack>true</unpack>
+                    <unpackOptions>
+                        <excludes>
+                            <exclude>${yousee.bibliographic.metadata.validator}-*</exclude>
+                        </excludes>
+                    </unpackOptions>
+                    <includes>
+                        <include>${medieplatform}:${yousee.bibliographic.metadata.validator}</include>
+                    </includes>
+                    <scope>runtime</scope>
+                </dependencySet>
+                <dependencySet>
+                    <useProjectArtifact>false</useProjectArtifact>
+                    <outputDirectory>${yousee.components.dir}/${yousee.bibliographic.metadata.validator}/bin</outputDirectory>
+                    <directoryMode>0755</directoryMode>
+                    <useTransitiveDependencies>false</useTransitiveDependencies>
+                    <unpack>true</unpack>
+                    <unpackOptions>
+                        <includes>
+                            <include>${yousee.bibliographic.metadata.validator}-*</include>
+                        </includes>
+                    </unpackOptions>
+                    <includes>
+                        <include>${medieplatform}:${yousee.bibliographic.metadata.validator}</include>
+                    </includes>
+                    <scope>runtime</scope>
+                </dependencySet>
+        -->
+
+
+    </dependencySets>
+
+
+    <fileSets>
+
+        <fileSet>
+            <outputDirectory>integrationTests</outputDirectory>
+            <directory>src/main/integrationTests</directory>
+            <fileMode>0700</fileMode>
+            <directoryMode>0755</directoryMode>
+            <filtered>true</filtered>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>${script.dir}</outputDirectory>
+            <directory>src/main/bin</directory>
+            <fileMode>0700</fileMode>
+            <directoryMode>0755</directoryMode>
+            <filtered>true</filtered>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>${workflow.dir}</outputDirectory>
+            <directory>src/main/taverna</directory>
+            <directoryMode>0755</directoryMode>
+            <filtered>true</filtered>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>examples</outputDirectory>
+            <directory>src/main/examples</directory>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+
+
+
+
+    </fileSets>
+
+    <files>
+    </files>
+
+
+</assembly>
+

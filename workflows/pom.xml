@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- TODO -->
 
     <parent>
         <groupId>scape</groupId>
@@ -16,6 +15,14 @@
     <packaging>pom</packaging>
 
     <artifactId>workflows</artifactId>
+
+    <properties>
+        <workflow.dir>taverna</workflow.dir>
+        <dependencies.dir>lib</dependencies.dir>
+        <script.dir>bin</script.dir>
+
+    </properties>
+
 
 
     <dependencies>
