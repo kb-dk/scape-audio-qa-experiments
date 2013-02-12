@@ -1,0 +1,18 @@
+
+
+This workflow depends on
+
+taverna (obviously)
+migrationQA from scape-xcorrsound
+ffmpeg >= 0.10
+mpeg321
+jhove2.sh
+
+This means that these commands must be available and functions from the $PATH
+ffmpeg
+ffprobe
+mpeg321
+jhove2.sh
+migrationQA
+executeWorkflow.sh
+
