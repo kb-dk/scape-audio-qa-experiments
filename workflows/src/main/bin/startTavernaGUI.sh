@@ -35,6 +35,7 @@ cleanup () {
 }
 trap cleanup 0 3 15
 
+mkdir -p $HOME/tmp/taverna
 TAVERNA_TEMP_DIR=$(mktemp -d -p "$HOME/tmp/taverna")
 
 export TMPDIR="$TAVERNA_TEMP_DIR"
@@ -43,12 +44,6 @@ export TMP="$TAVERNA_TEMP_DIR"
 export TEMP="$TAVERNA_TEMP_DIR"
 export _JAVA_OPTIONS="-Djava.io.tmpdir=$TAVERNA_TEMP_DIR"
 
-executeworkflow.sh \
--inmemory \
--inputvalue mp3_list "$MP3_LIST"  \
--inputvalue output_files "$OUTPUT_DIR"  \
--outputdir "$OUTPUT_DIR"
-"$WORKFLOW"
-
+taverna.sh "$WORKFLOW"
 
 cleanup

@@ -1,9 +1,7 @@
-
-
-This workflow depends on
+These workflows depend on
 
 taverna (obviously)
-migrationQA from scape-xcorrsound
+migrationQA (later changed to waveform-compare) from scape-xcorrsound
 ffmpeg >= 0.10
 mpeg321
 jhove2.sh
@@ -15,4 +13,15 @@ mpeg321
 jhove2.sh
 migrationQA
 executeWorkflow.sh
+
+$PATH can be updated in setenv.sh
+
+checkinstall.sh checks if the required tools are installed.
+
+migrateMP3ToWAV.sh <input-file-list> <output-dir> uses the
+migrateValidateCompare_iapetus_listToList_largeScaleTest_V2.t2flow workflow (to be renamed)
+to test migration and qa of the files in input-file-list.
+
+Output is written to output-dir, but the wav files are deleted as the workflow is used
+in large-scale testing, and the wav files are large indeed.
 
