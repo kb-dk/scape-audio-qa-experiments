@@ -1,0 +1,4 @@
+$TAVERNA_SCRIPT_DIR/../samples/freestylemix_-_hisboyelroy_-_Revolve.mp3
+$TAVERNA_SCRIPT_DIR/../samples/Mixro_-_CCmixter.org.mp3
+$TAVERNA_SCRIPT_DIR/../samples/Loveshadow_-_The_Sweetest_Sin.mp3
+$TAVERNA_SCRIPT_DIR/../samples/Zapac_-_Test_Drive.mp3

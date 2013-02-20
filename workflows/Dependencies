@@ -16,6 +16,8 @@ executeWorkflow.sh
 
 $PATH can be updated in setenv.sh
 
+Note the jhove2 "not in install dir fix script" expects jhove2 to be installed in $HOME/tools/jhove2-2.0.0
+
 checkinstall.sh checks if the required tools are installed.
 
 migrateMP3ToWAV.sh <input-file-list> <output-dir> uses the

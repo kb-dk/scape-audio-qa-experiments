@@ -43,11 +43,13 @@ export TMP="$TAVERNA_TEMP_DIR"
 export TEMP="$TAVERNA_TEMP_DIR"
 export _JAVA_OPTIONS="-Djava.io.tmpdir=$TAVERNA_TEMP_DIR"
 
+export TAVERNA_SCRIPT_DIR=$SCRIPT_PATH
+
 executeworkflow.sh \
 -inmemory \
 -inputvalue mp3_list "$MP3_LIST"  \
 -inputvalue output_files "$OUTPUT_DIR"  \
--outputdir "$OUTPUT_DIR"
+-outputdir "$OUTPUT_DIR/taverna" \
 "$WORKFLOW"
 
 

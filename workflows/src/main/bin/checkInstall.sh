@@ -26,7 +26,7 @@ fi
 
 
 
-jhove2.sh --help 2>@1 > /dev/null
+jhove2.sh --help 2>&1 > /dev/null
 jhove2Installed=$?
 if [ $jhove2Installed != 0 ]; then
     echo "JHove2 characterisation framework engine not installed"
@@ -34,7 +34,7 @@ if [ $jhove2Installed != 0 ]; then
 fi
 
 
-executeworkflow.sh 2>@1 > /dev/null
+executeworkflow.sh 2>&1 > /dev/null
 tavernaInstalled=$?
 if [ $tavernaInstalled != 0 ]; then
     echo "Taverna workflow engine not installed"

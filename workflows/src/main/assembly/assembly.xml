@@ -87,8 +87,8 @@
         </fileSet>
 
         <fileSet>
-            <outputDirectory>examples</outputDirectory>
-            <directory>src/main/examples</directory>
+            <outputDirectory>samples</outputDirectory>
+            <directory>src/main/samples</directory>
             <directoryMode>0755</directoryMode>
         </fileSet>
 
