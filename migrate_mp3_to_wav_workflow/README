@@ -21,9 +21,9 @@ Note the jhove2 "not in install dir fix script" expects jhove2 to be installed i
 checkinstall.sh checks if the required tools are installed.
 
 migrateMP3ToWAV.sh <input-file-list> <output-dir> uses the
-migrateValidateCompare_iapetus_listToList_largeScaleTest_V2.t2flow workflow (to be renamed)
-to test migration and qa of the files in input-file-list.
+/src/main/taverna/Mp3toWav_migrateValidateCompareCompare.t2flow workflow
+to migrate and qa the files in <input-file-list>.
 
-Output is written to output-dir, but the wav files are deleted as the workflow is used
-in large-scale testing, and the wav files are large indeed.
+The WAV output files and the qa result summary are written to <output-dir>.
+The detailed results and logs are written to <output-dir>/logs.
 

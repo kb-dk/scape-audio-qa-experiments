@@ -16,7 +16,7 @@
 
 
     <modules>
-        <module>workflows</module>
+        <module>migrate_mp3_to_wav_workflow</module>
     </modules>
 
 

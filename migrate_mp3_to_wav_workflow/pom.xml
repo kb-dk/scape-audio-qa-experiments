@@ -14,7 +14,7 @@
 
     <packaging>pom</packaging>
 
-    <artifactId>workflows</artifactId>
+    <artifactId>migrate_mp3_to_wav_workflow</artifactId>
 
     <properties>
         <workflow.dir>taverna</workflow.dir>
