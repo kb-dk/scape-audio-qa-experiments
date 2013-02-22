@@ -5,7 +5,7 @@ CURRENT=$PWD
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 
 WORKFLOW_PATH=$(readlink -f $SCRIPT_PATH/../taverna)
-WORKFLOW="$WORKFLOW_PATH/migrateValidateCompare_iapetus_listToList_largeScaleTest_V2.t2flow"
+WORKFLOW="$WORKFLOW_PATH/Mp3toWav_migrateValidateCompareCompare.t2flow"
 
 MP3_LIST=$1
 OUTPUT_DIR=$2
