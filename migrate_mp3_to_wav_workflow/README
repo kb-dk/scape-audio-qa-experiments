@@ -27,3 +27,4 @@ to migrate and qa the files in <input-file-list>.
 The WAV output files and the qa result summary are written to <output-dir>.
 The detailed results and logs are written to <output-dir>/logs.
 
+NOTE <input-file-list> and <output-dir> must be full paths.
