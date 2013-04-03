@@ -6,7 +6,7 @@ SCRIPT_PATH=$(dirname $(readlink -f $0))
 
 WORKFLOW_PATH=$(readlink -f $SCRIPT_PATH/../taverna)
 #WORKFLOW="$WORKFLOW_PATH/Mp3toWav_migrateValidateCompareCompare.t2flow"
-WORKFLOW="$WORKFLOW_PATH/waveformQA.t2flow"
+WORKFLOW="$WORKFLOW_PATH/validateCompareCompare.t2flow"
 
 MP3_LIST=$1
 WAV_LIST=$2
@@ -49,7 +49,7 @@ export TAVERNA_SCRIPT_DIR=$SCRIPT_PATH
 
 executeworkflow.sh \
 -inmemory \
--inputvalue mp3_list "$MP3_LIST"  \
+-inputvalue comparetowav_list "$MP3_LIST"  \
 -inputvalue migratedwav_list "$WAV_LIST"  \
 -inputvalue output_files "$OUTPUT_DIR"  \
 -outputdir "$OUTPUT_DIR/taverna_output_dir" \
