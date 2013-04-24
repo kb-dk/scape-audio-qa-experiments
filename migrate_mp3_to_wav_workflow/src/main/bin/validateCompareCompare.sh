@@ -17,7 +17,7 @@ if [ -z "$OUTPUT_DIR" ]; then
 fi
 
 if [ "$(ps -ef | grep [\ ]$WORKFLOW)" != "" ] ; then
-    echo "Workflow was already was running, exiting!"
+    echo "Workflow was already running, exiting!"
     exit 1
 fi
 
