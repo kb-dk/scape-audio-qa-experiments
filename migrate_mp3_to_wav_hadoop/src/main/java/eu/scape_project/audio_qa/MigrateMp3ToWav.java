@@ -1,4 +1,4 @@
-package main.java.eu.scape_project.audio_qa;
+package eu.scape_project.audio_qa;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -14,9 +14,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +36,11 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         @Override
         protected void map(LongWritable lineNo , Text inputMp3path, Context context) throws IOException, InterruptedException {
             //start with ffprobe
+            /*
             List<String> commandLine = new ArrayList<String>();
             commandLine.add("ffprobe");
             commandLine.add(inputMp3path.toString());
+              */
             ProcessBuilder pb = new ProcessBuilder("ffprobe", inputMp3path.toString());
 
             //start the executable
@@ -54,10 +54,59 @@ public class MigrateMp3ToWav extends Configured implements Tool {
                 e.printStackTrace();
             }
             int exitCode = proc.exitValue();
-            String stdoutString = stdout.ready() ? stdout.readLine() : "";
-            String stderrString = stderr.ready() ? stderr.readLine() : "";
-            //write command + log of stdout and stderr to the output key text
-            Text output = new Text("ffprobe\n" + stdoutString + "\n" + stderrString + "\n");
+            String stdoutString = "";
+            while (stdout.ready()) {
+                stdoutString += stdout.readLine() + "\n";
+            }
+            String stderrString = "";
+            while (stderr.ready()) {
+                stderrString += stderr.readLine() + "\n";
+            }
+            //TODO write result to hdfs somewhere?!?
+
+            //create a temporary local output file name for use with the local tool in TMPDIR
+            new File("/tmp/hadooptmp-5/").mkdirs();
+            File localOutputTempDir = File.createTempFile("TavernaHadoopWrapper-","",
+                    new File("/tmp/hadooptmp-5/"));
+            //change this to a directory and ...
+            localOutputTempDir.delete();
+            localOutputTempDir.mkdirs();
+            localOutputTempDir.setReadable(true, false);
+            localOutputTempDir.setWritable(true, false);//need this so output can be saved
+
+            String[] inputSplit = inputMp3path.toString().split("/");
+
+            String outputFile = localOutputTempDir.getAbsolutePath() + inputSplit[inputSplit.length-1] + "_ffprobe.log";
+
+
+            BufferedWriter outputFileWriter = new BufferedWriter(new FileWriter(outputFile,true));
+
+            outputFileWriter.write(stdoutString + stderrString);
+            outputFileWriter.newLine();
+            outputFileWriter.close();
+
+            //but I don't want temporary files... "test-output/migrated_wavs/"+... ender i
+            //"/mapred/local/taskTracker/scape/jobcache/job_201307091233_0041/attempt_201307091233_0041_m_000000_0/work/test-output/migrated_wavs/MigrateMp3ToWav-2290101858449467459P1_1000_1200_890216_001.mp3_ffprobe.log"
+            new File("test-output/migrated_wavs/").mkdirs();
+            File outputDir = new File(new File("test-output/migrated_wavs/"),
+                    "MigrateMp3ToWav"+Double.toString(Math.random()).substring(2));
+            //outputDir.delete();
+            outputDir.mkdirs();
+            outputDir.setReadable(true, false);
+            outputDir.setWritable(true, false);
+
+            String outputFile2 = outputDir.getAbsolutePath() + inputSplit[inputSplit.length-1] + "_ffprobe.log";
+            System.out.println(outputFile2);
+
+            BufferedWriter outputFileWriter2 = new BufferedWriter(new FileWriter(outputFile2,true));
+
+            outputFileWriter2.write(stdoutString + stderrString);
+            outputFileWriter2.newLine();
+            outputFileWriter2.close();
+
+
+            //write log of stdout and stderr to the output key text
+            Text output = new Text(outputFile2 + stdoutString + stderrString);
 
             //TODO migrate
 
@@ -99,7 +148,7 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         job.setOutputFormatClass(TextOutputFormat.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(LongWritable.class);
 
         return job.waitForCompletion(true) ? 0 : -1;
     }

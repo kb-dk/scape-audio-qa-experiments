@@ -63,7 +63,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>eu.scape_project.audio_qa.MigrateMp3ToWavTest</mainClass>
+                            <mainClass>eu.scape_project.audio_qa.MigrateMp3ToWav</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
