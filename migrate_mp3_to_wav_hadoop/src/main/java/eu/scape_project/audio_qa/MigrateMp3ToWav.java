@@ -36,11 +36,6 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         @Override
         protected void map(LongWritable lineNo , Text inputMp3path, Context context) throws IOException, InterruptedException {
             //start with ffprobe
-            /*
-            List<String> commandLine = new ArrayList<String>();
-            commandLine.add("ffprobe");
-            commandLine.add(inputMp3path.toString());
-              */
             ProcessBuilder pb = new ProcessBuilder("ffprobe", inputMp3path.toString());
 
             //start the executable
@@ -62,53 +57,59 @@ public class MigrateMp3ToWav extends Configured implements Tool {
             while (stderr.ready()) {
                 stderrString += stderr.readLine() + "\n";
             }
-            //TODO write result to hdfs somewhere?!?
-
-            //create a temporary local output file name for use with the local tool in TMPDIR
-            new File("/tmp/hadooptmp-5/").mkdirs();
-            File localOutputTempDir = File.createTempFile("TavernaHadoopWrapper-","",
-                    new File("/tmp/hadooptmp-5/"));
-            //change this to a directory and ...
-            localOutputTempDir.delete();
-            localOutputTempDir.mkdirs();
-            localOutputTempDir.setReadable(true, false);
-            localOutputTempDir.setWritable(true, false);//need this so output can be saved
-
+            //create a file-specific output dir
             String[] inputSplit = inputMp3path.toString().split("/");
+            String inputMp3 = inputSplit[inputSplit.length - 1];
+            String[] inputMp3Split = inputMp3.split(".");
+            String inputMp3Name = inputMp3Split[0];
 
-            String outputFile = localOutputTempDir.getAbsolutePath() + inputSplit[inputSplit.length-1] + "_ffprobe.log";
-
-
-            BufferedWriter outputFileWriter = new BufferedWriter(new FileWriter(outputFile,true));
-
-            outputFileWriter.write(stdoutString + stderrString);
-            outputFileWriter.newLine();
-            outputFileWriter.close();
-
-            //but I don't want temporary files... "test-output/migrated_wavs/"+... ender i
-            //"/mapred/local/taskTracker/scape/jobcache/job_201307091233_0041/attempt_201307091233_0041_m_000000_0/work/test-output/migrated_wavs/MigrateMp3ToWav-2290101858449467459P1_1000_1200_890216_001.mp3_ffprobe.log"
-            new File("test-output/migrated_wavs/").mkdirs();
-            File outputDir = new File(new File("test-output/migrated_wavs/"),
-                    "MigrateMp3ToWav"+Double.toString(Math.random()).substring(2));
-            //outputDir.delete();
+            File outputDir = new File("/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/",
+                    inputMp3Name);
+            outputDir.delete();
             outputDir.mkdirs();
             outputDir.setReadable(true, false);
             outputDir.setWritable(true, false);
 
-            String outputFile2 = outputDir.getAbsolutePath() + inputSplit[inputSplit.length-1] + "_ffprobe.log";
-            System.out.println(outputFile2);
+            String outputFile = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffprobe.log";
+            BufferedWriter outputFileWriter = new BufferedWriter(new FileWriter(outputFile,true));
+            //write log of stdout and stderr to the ffprobe output file
+            outputFileWriter.write(stdoutString + stderrString);
+            outputFileWriter.newLine();
+            outputFileWriter.close();
 
-            BufferedWriter outputFileWriter2 = new BufferedWriter(new FileWriter(outputFile2,true));
+            //next migrate with ffmpeg
+            if (exitCode==0) {
+                pb = new ProcessBuilder("ffmpeg -y -i", inputMp3path.toString(),
+                        outputDir.toString() + "/" + inputMp3 + "_ffmpeg.wav");
+                //start the executable
+                proc = pb.start();
+                stdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                stderr = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+                try {
+                    //wait for process to end before continuing
+                    proc.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                exitCode = proc.exitValue();
+                stdoutString = "";
+                while (stdout.ready()) {
+                    stdoutString += stdout.readLine() + "\n";
+                }
+                stderrString = "";
+                while (stderr.ready()) {
+                    stderrString += stderr.readLine() + "\n";
+                }
 
-            outputFileWriter2.write(stdoutString + stderrString);
-            outputFileWriter2.newLine();
-            outputFileWriter2.close();
-
-
-            //write log of stdout and stderr to the output key text
-            Text output = new Text(outputFile2 + stdoutString + stderrString);
-
-            //TODO migrate
+                outputFile = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
+                outputFileWriter = new BufferedWriter(new FileWriter(outputFile,true));
+                //write log of stdout and stderr to the ffmpeg log file
+                outputFileWriter.write(stdoutString + stderrString);
+                outputFileWriter.newLine();
+                outputFileWriter.close();
+            }
+            //write output directory to the output key text
+            Text output = new Text(outputDir.toString());
 
             context.write(output, new LongWritable(exitCode));
         }
