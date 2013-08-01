@@ -1,3 +1,4 @@
+HOW TO
 The migrate-mp3-to-wav-hadoop module creates two hadoop jobs. The first job MigrateMp3ToWav, which does the
 actual migration and the ffprobe characterisation of the mp3 files.
 
@@ -9,6 +10,15 @@ To run the job first run 'mvn package' to get 'migrate_mp3_to_wav_hadoop-0.1-SNA
 Then run
 'hadoop jar migrate_mp3_to_wav_hadoop-0.1-SNAPSHOT-jar-with-dependencies.jar
 <input/mp3list.txt> <output/mp3-to-wav-output-dir>'
-where <mp3list.txt> is the path (on hdfs) to the text file with the list of mp3 file paths (on hdfs)
-and <output/mp3-to-wav-output-dir> is the output directory (on hdfs)
+where <mp3list.txt> is the path (on hdfs) to the text file with the list of mp3 file paths (on hdfs),
+and <output/mp3-to-wav-output-dir> is the output directory for the migration and qa results
+as well as the map-reduce result (on hdfs).
 
+PERMISSIONS
+Note that the map-reduce results are written by the user that invoked the map-reduce job with this users permission.
+The commands run and the results written within the map job are run and written by a different "map-red user"
+with this users permission. At SBs platform this user has fewer permissions. The <output/mp3-to-wav-output-dir>
+must have write permissions for both users!!!
+
+At SB we are right now using
+"/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/"
