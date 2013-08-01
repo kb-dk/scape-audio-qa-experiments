@@ -3,6 +3,7 @@ package eu.scape_project.audio_qa;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 import java.io.*;
 
@@ -17,6 +18,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, Text, LongWritab
             String[] inputMp3Split = inputMp3.split("\\.");
             String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
+            //todo fix output directory
             File outputDir = new File(MigrateMp3ToWav.getOutputdirPath(), inputMp3Name);
             outputDir.delete();
             outputDir.mkdirs();

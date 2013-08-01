@@ -1,4 +1,3 @@
-HOW TO
 The migrate-mp3-to-wav-hadoop module creates two hadoop jobs. The first job MigrateMp3ToWav, which does the
 actual migration and the ffprobe characterisation of the mp3 files.
 
@@ -9,16 +8,21 @@ To run the job first run 'mvn package' to get 'migrate_mp3_to_wav_hadoop-0.1-SNA
 
 Then run
 'hadoop jar migrate_mp3_to_wav_hadoop-0.1-SNAPSHOT-jar-with-dependencies.jar
-<input/mp3list.txt> <output/mp3-to-wav-output-dir>'
+<input/mp3list.txt> <output/map-reduce-result-output-dir> <output/mp3-to-wav-output-dir>'
 where <mp3list.txt> is the path (on hdfs) to the text file with the list of mp3 file paths (on hdfs),
-and <output/mp3-to-wav-output-dir> is the output directory for the migration and qa results
-as well as the map-reduce result (on hdfs).
+<output/map-reduce-result-output-dir> is the output directory for the map-reduce result (on hdfs)
+and <output/mp3-to-wav-output-dir> is the output directory for the migration and qa results (on hdfs).
 
-PERMISSIONS
-Note that the map-reduce results are written by the user that invoked the map-reduce job with this users permission.
+The reason for two output directories is that the map-reduce results are written by the user that
+invoked the map-reduce job with this users permission. This user creates the <output/map-reduce-result-output-dir>
+output directory with very restricted permissions.
+
 The commands run and the results written within the map job are run and written by a different "map-red user"
-with this users permission. At SBs platform this user has fewer permissions. The <output/mp3-to-wav-output-dir>
-must have write permissions for both users!!!
+with this users permission. At SBs platform this user does not have permission to write to the output directory
+just created. We therefore add a second output directory, where this user has permissions to write!
 
-At SB we are right now using
+The better solution may be just one output directory with write permissions for both users!!! We will look into the
+possibility of changing permissions on the created output directory.
+
+At SB we currently use this directory as the second (and primary) output directory
 "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/"

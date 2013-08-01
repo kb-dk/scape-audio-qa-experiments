@@ -20,6 +20,8 @@ import java.io.*;
  * User: bam
  * Date: 6/28/13
  * Time: 10:22 AM
+ *
+ * Create the map-reduce job for migrating (and characterising) the mp3 files on the given input list.
  */
 public class MigrateMp3ToWav extends Configured implements Tool {
 
@@ -37,7 +39,9 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         }
     }
 
+    /** This outputdirPath should NOT be necessary! */
     protected static String outputdirPath = "test-output/MigrateMp3ToWav/";
+    //            "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
     public static String getOutputdirPath() {
         return outputdirPath;
     }
@@ -53,7 +57,6 @@ public class MigrateMp3ToWav extends Configured implements Tool {
             TextInputFormat.addInputPath(job, new Path(args[0]));
         if (n > 1) {
             SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
-            outputdirPath = args[2];
         }
 
         job.setMapperClass(MigrationMapper.class);
@@ -70,6 +73,9 @@ public class MigrateMp3ToWav extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
+        if (args.length>2) {
+            outputdirPath = args[2];
+        }
         System.exit(ToolRunner.run(new MigrateMp3ToWav(), args));
     }
 }
