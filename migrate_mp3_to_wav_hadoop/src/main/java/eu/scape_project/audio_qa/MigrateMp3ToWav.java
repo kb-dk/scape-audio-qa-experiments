@@ -13,15 +13,14 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
+ * Create the map-reduce job for migrating (and characterising) the mp3 files on the given input list.
  * eu.scape_project
- * User: bam
+ * User: baj@statsbiblioteket.dk
  * Date: 6/28/13
  * Time: 10:22 AM
- *
- * Create the map-reduce job for migrating (and characterising) the mp3 files on the given input list.
  */
 public class MigrateMp3ToWav extends Configured implements Tool {
 
@@ -39,15 +38,11 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         }
     }
 
-    /** This outputdirPath should NOT be necessary! */
-    protected static String outputdirPath = "test-output/MigrateMp3ToWav/";
-    //            "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
-    public static String getOutputdirPath() {
-        return outputdirPath;
-    }
-
     public int run(String[] args) throws Exception {
         Configuration configuration = getConf();
+        //configuration.setInt("mapreduce.input.fileinputformat.split.maxsize", 1024);//new API? Does not work!
+        //configuration.setInt("mapred.max.split.size", 1024);//old API? Works!
+        //set as command line parameter -Dmapred.max.split.size=1024 instead
 
         Job job = new Job(configuration, "Migrate Mp3 To Wav");
         job.setJarByClass(MigrateMp3ToWav.class);
@@ -55,9 +50,10 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         int n = args.length;
         if (n > 0)
             TextInputFormat.addInputPath(job, new Path(args[0]));
-        if (n > 1) {
+        if (n > 1)
             SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
-        }
+        if (n > 2)
+            configuration.set("map.outputdir", args[2]);
 
         job.setMapperClass(MigrationMapper.class);
         job.setCombinerClass(MigrationReducer.class);
@@ -69,13 +65,13 @@ public class MigrateMp3ToWav extends Configured implements Tool {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
 
+        job.setNumReduceTasks(1);
+
         return job.waitForCompletion(true) ? 0 : -1;
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length>2) {
-            outputdirPath = args[2];
-        }
+        AudioQASettings.OUTPUT_DIR += "_" + Long.toString(Math.round(Math.random()*100000)) + "/";
         System.exit(ToolRunner.run(new MigrateMp3ToWav(), args));
     }
 }

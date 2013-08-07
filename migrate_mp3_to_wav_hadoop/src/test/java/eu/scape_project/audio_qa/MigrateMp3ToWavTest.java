@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * eu.scape_project
- * User: bam
+ * User: baj@statsbiblioteket.dk
  * Date: 6/28/13
  * Time: 11:00 AM
  * See the <a href="https://cwiki.apache.org/confluence/display/MRUNIT/Index">MRUnit Wiki</a> for more information.
@@ -24,10 +24,11 @@ public class MigrateMp3ToWavTest {
     ReduceDriver<Text, LongWritable, Text, LongWritable> reduceDriver;
 
     Text inputFilePath = new Text("/home/bam/Projects/scape-audio-qa/migrate_mp3_to_wav_workflow/src/main/samples/freestylemix_-_hisboyelroy_-_Revolve.mp3");
-    Text outputdir = new Text("test-output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve");
+    Text outputdir = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve");
 
     @Before
     public void setUp() {
+        AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
         MigrationMapper mapper = new MigrationMapper();
         MigrateMp3ToWav.MigrationReducer reducer = new MigrateMp3ToWav.MigrationReducer();
         mapDriver = new MapDriver<LongWritable, Text, Text, LongWritable>();
