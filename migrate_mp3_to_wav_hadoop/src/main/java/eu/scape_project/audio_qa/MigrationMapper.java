@@ -11,6 +11,10 @@ import java.nio.file.Path;
 /**
  * The map function characterises the mp3 files referenced in input and migrates them to wav.
  * The map function returns the path to output directory with the result files.
+ *
+ * The input is a line number as key (not used) and a Text line, which we assume is the path to an mp3 file.
+ * The output is the path to an output directory, and an exit code (not used).
+ *
  */
 public class MigrationMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
@@ -31,21 +35,25 @@ public class MigrationMapper extends Mapper<LongWritable, Text, Text, LongWritab
 
         //todo fix output directory + owner??? + permissions
         File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
-        recursiveDeleteDir(outputDir);
+        //recursiveDeleteDir(outputDir);
         outputDir.mkdirs();
         outputDir.setReadable(true, false);
         outputDir.setWritable(true, false);
+        /*
         File parent = outputDir.getParentFile();
         parent.setReadable(true, false);
         parent.setWritable(true, false);
         File grandparent = parent.getParentFile();
         grandparent.setReadable(true, false);
         grandparent.setWritable(true, false);
+          */
 
-        System.out.println(outputDir);//todo logging
+        //System.out.println(outputDir);//todo logging
 
         //write output directory to the output key text
         Text output = new Text(outputDir.toString());
+
+        //copy the input mp3 to output directory for qa???
 
         //start with ffprobe
         String outputFileString = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffprobe.log";
@@ -60,12 +68,17 @@ public class MigrationMapper extends Mapper<LongWritable, Text, Text, LongWritab
         //next migrate with ffmpeg
         if (exitCode == 0) {
             String log = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
+            File logFile = new File(log);
+            logFile.setReadable(true, false);
+            logFile.setWritable(true, false);
             String[] ffmpegcommand = new String[5];
             ffmpegcommand[0] = "ffmpeg";
             ffmpegcommand[1] = "-y";
             ffmpegcommand[2] = "-i";
             ffmpegcommand[3] = inputMp3path.toString();
             File outputwav = new File(outputDir.toString() + "/", inputMp3 + "_ffmpeg.wav");
+            outputwav.setReadable(true, false);
+            outputwav.setWritable(true, false);
             ffmpegcommand[4] = outputwav.getAbsolutePath();
             exitCode = CLIToolRunner.runCLItool(ffmpegcommand, log);
         }

@@ -71,7 +71,7 @@ public class MigrateMp3ToWav extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        AudioQASettings.OUTPUT_DIR += "_" + Long.toString(Math.round(Math.random()*100000)) + "/";
+        //AudioQASettings.OUTPUT_DIR += "_" + Long.toString(Math.round(Math.random()*100000)) + "/";
         System.exit(ToolRunner.run(new MigrateMp3ToWav(), args));
     }
 }

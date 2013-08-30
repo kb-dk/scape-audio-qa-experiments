@@ -3,7 +3,6 @@ package eu.scape_project.audio_qa;
 import java.io.*;
 
 /**
- *
  * eu.scape_project
  * User: baj@statsbiblioteket.dk
  * Date: 8/7/13
