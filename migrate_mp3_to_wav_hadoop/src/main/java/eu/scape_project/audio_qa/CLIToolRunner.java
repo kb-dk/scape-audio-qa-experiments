@@ -9,7 +9,7 @@ import java.io.*;
  * Time: 11:57 AM
  */
 public class CLIToolRunner {
-    static int runCLItool(String[] commandline, String logFile) throws IOException {
+    public static int runCLItool(String[] commandline, String logFile) throws IOException {
         ProcessBuilder pb = new ProcessBuilder(commandline);
         //start the executable
         Process proc = pb.start();

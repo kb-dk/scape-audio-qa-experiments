@@ -8,6 +8,7 @@ import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class QAMigratedWavTest {
 
     Text inputFilePath = new Text("/home/bam/Projects/scape-audio-qa/migrate_mp3_to_wav_workflow/src/main/samples/freestylemix_-_hisboyelroy_-_Revolve.mp3");
     Text outputdir = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve");
+    Text qaOutput = new Text("outputDir: output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve\n" +
+            "inputMp3: freestylemix_-_hisboyelroy_-_Revolve.mp3");
 
     @Before
     public void setUp() {
@@ -41,26 +44,26 @@ public class QAMigratedWavTest {
     }
 
     @Test
-    public void testMapper() {
+    public void testMapper() throws IOException {
         mapDriver.withInput(new LongWritable(0), inputFilePath);
         mapDriver.withOutput(outputdir, new LongWritable(0));
         mapDriver.runTest();
     }
 
     @Test
-    public void testReducer() {
+    public void testReducer() throws IOException {
         List<LongWritable> values = new ArrayList<LongWritable>();
         values.add(new LongWritable(0));
         values.add(new LongWritable(0));
         reduceDriver.withInput(outputdir, values);
-        reduceDriver.withOutput(outputdir, new LongWritable(0));
+        reduceDriver.withOutput(qaOutput, new LongWritable(0));
         reduceDriver.runTest();
     }
 
     @Test
-    public void testMapReduce() {
+    public void testMapReduce() throws IOException {
         mapReduceDriver.withInput(new LongWritable(0), inputFilePath);
-        mapReduceDriver.addOutput(outputdir, new LongWritable(0));
+        mapReduceDriver.addOutput(qaOutput, new LongWritable(0));
         mapReduceDriver.runTest();
     }
 }

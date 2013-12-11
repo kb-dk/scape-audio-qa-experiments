@@ -1,5 +1,7 @@
 package eu.scape_project.audio_qa;
 
+import eu.scape_project.audio_qa.AudioQASettings;
+import eu.scape_project.audio_qa.CLIToolRunner;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -16,7 +18,7 @@ import java.nio.file.Path;
  * The output is the path to an output directory, and an exit code (not used).
  *
  */
-public class MigrationMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
     @Override
     protected void map(LongWritable lineNo, Text inputMp3path, Context context) throws IOException, InterruptedException {
@@ -83,7 +85,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, Text, LongWritab
             exitCode = CLIToolRunner.runCLItool(ffmpegcommand, log);
         }
 
-        context.write(output, new LongWritable(exitCode));
+        context.write(new LongWritable(exitCode), output);
     }
 
     public boolean recursiveDeleteDir(File outputDir) {

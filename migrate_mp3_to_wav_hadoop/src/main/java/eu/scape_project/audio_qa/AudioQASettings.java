@@ -11,6 +11,6 @@ public class AudioQASettings {
     /**
      * Default workflow output directory on HDFS.
      */
-    protected static String OUTPUT_DIR =
+    public static String OUTPUT_DIR =
             "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
 }

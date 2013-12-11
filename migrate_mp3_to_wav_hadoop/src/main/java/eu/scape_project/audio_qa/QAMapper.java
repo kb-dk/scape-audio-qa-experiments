@@ -1,5 +1,7 @@
 package eu.scape_project.audio_qa;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -26,7 +28,10 @@ import java.util.Map;
  * The output is a boolean as Text "QA passed true/false", and an exit code (not used).
  *
  */
-public class QAMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
+
+    //TODO log where
+    private Log log = new Log4JLogger("QAMapper Log");
 
     @Override
     protected void map(LongWritable lineNo, Text inputMp3path, Context context) throws IOException, InterruptedException {
@@ -41,23 +46,24 @@ public class QAMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
         //what is the file-specific working directory
         File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
-        //write output directory to the output key text
-        Text output = new Text(outputDir.toString());
-        System.out.println(outputDir);
+        //write output directory and input mp3 to the output key text
+        Text output = new Text("outputDir: "+outputDir.toString());
+        output = new Text(output.toString()+"\ninputMp3: "+inputMp3);
+        log.debug("outputDir="+outputDir);
 
         //where is the wav, that we are performing qa on?
         File wav = new File(outputDir.toString() + "/", inputMp3 + "_ffmpeg.wav");
-        System.out.println(wav);
+        log.debug("wav="+wav);
 
         //ffprobe the wav file
         String wavFfprobeLogFileString = wav.getAbsolutePath() + "_ffprobe.log";
-        System.out.println(wavFfprobeLogFileString);
+        log.debug("wavFfprobeLogFileString="+wavFfprobeLogFileString);
         String [] ffprobeCommand = new String[2];
         ffprobeCommand[0] = "ffprobe";
         ffprobeCommand[1] = wav.toString();
         int exitCode = CLIToolRunner.runCLItool(ffprobeCommand, wavFfprobeLogFileString);
         File outputFile = new File(wavFfprobeLogFileString);
-        System.out.println(outputFile);
+        log.debug("outputFile="+outputFile);
         outputFile.setReadable(true, false);
         outputFile.setWritable(true, false);
 
@@ -65,9 +71,9 @@ public class QAMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
             //where is the ffprobe output of the original mp3?
             String mp3FfprobeLogFileString = outputDir.toString() + "/" + inputMp3 + "_ffprobe.log";
 
-            //TODO compare the two ffprobe characterisations
-            exitCode = ffprobeExtractCompare(wavFfprobeLogFileString, mp3FfprobeLogFileString, output);
-
+            //compare the two ffprobe characterisations
+            exitCode = ffprobeExtractCompare(wavFfprobeLogFileString, mp3FfprobeLogFileString);
+            //TODO what about the updates to the output Text
         }
         //TODO run JHove2 on the wav file
 
@@ -77,10 +83,10 @@ public class QAMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
         //TODO run xcorrSound waveform-compare to compare the migrated wav and the converted comparison wav
 
-        context.write(output, new LongWritable(exitCode));
+        context.write(new LongWritable(exitCode), output);
     }
 
-    private int ffprobeExtractCompare(String wavFFprobeOutputPath, String mp3FFprobeOutputPath, Text output) throws IOException {
+    private int ffprobeExtractCompare(String wavFFprobeOutputPath, String mp3FFprobeOutputPath) throws IOException {
         int exitCode = 0;
         String wavFFprobeOutput = "";
         BufferedReader in = new BufferedReader(new FileReader(wavFFprobeOutputPath));
@@ -96,37 +102,54 @@ public class QAMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
         }
         Map<String, String> mp3FFprobeProperties = extractFromFFprobe(mp3FFprobeOutput);
 
-        for (String property: mp3FFprobeProperties.keySet()) {
-            System.out.println(property);
-            System.out.println(mp3FFprobeProperties.get(property));
-            System.out.println(wavFFprobeProperties.get(property));
-            try {
-                if (property.equals("duration") && !compareDuration(mp3FFprobeProperties.get(property), wavFFprobeProperties.get(property), 10)) {
-                    exitCode = 1;
-                    //write error message to the output key text
-                    output = new Text("Error in FFprobe property "+property+" comparison for file "+inputMp3+
-                            "\nProperties not close enough."+
-                            "\nProperty for mp3 file: "+mp3FFprobeProperties.get(property)+
-                            "\nProperty for wav file: "+wavFFprobeProperties.get(property));
-                }
-            } catch (ParseException e) {
+        //first check if durations are close enough
+        String wavDuration = wavFFprobeProperties.remove("duration");
+        String mp3Duration = mp3FFprobeProperties.remove("duration");
+        try {
+            if (!compareDuration(wavDuration, mp3Duration, 100)) {
                 exitCode = 1;
-                //write error message to the output key text
-                output = new Text("Error in FFprobe property "+property+" comparison for file "+inputMp3+
-                        "\nProperty could not be parsed."+
-                        "\nProperty for mp3 file: "+mp3FFprobeProperties.get(property)+
-                        "\nProperty for wav file: "+wavFFprobeProperties.get(property));
+                //write error message to log
+                log.info("Error in FFprobe property duration comparison for file "+
+                        "\nProperties not close enough."+
+                        "\nProperty for mp3 file: "+mp3Duration+
+                        "\nProperty for wav file: "+wavDuration);
             }
-            if (!mp3FFprobeProperties.get(property).equals(wavFFprobeProperties.get(property))) {
+        } catch (ParseException e) {
+            exitCode = 1;
+            //write error message to log
+            log.info("Error in FFprobe property duration comparison for file "+
+                    "\nProperty could not be parsed."+
+                    "\nProperty for mp3 file: "+mp3Duration+
+                    "\nProperty for wav file: "+wavDuration);
+        }
+
+        //now check number of channels equal
+        String wavChannels = wavFFprobeProperties.remove("channels");
+        String mp3Channels = mp3FFprobeProperties.remove("channels");
+        if (!compareChannels(wavChannels, mp3Channels)) {
+            exitCode = 1;
+            //write error message to log
+            log.info("Error in FFprobe property channel comparison for file "+
+                    "\nChannel properties do not match."+
+                    "\nProperty for mp3 file: "+mp3Channels+
+                    "\nProperty for wav file: "+wavChannels);
+        }
+
+        //bitrate does not have to be equal
+        wavFFprobeProperties.remove("bitrate");
+        mp3FFprobeProperties.remove("bitrate");
+
+        //check all other properties equal
+        for (String property: mp3FFprobeProperties.keySet()) {
+            if (!mp3FFprobeProperties.get(property).trim().equalsIgnoreCase(wavFFprobeProperties.get(property).trim())) {
                 exitCode = 1;
-                //write error message to the output key text
-                output = new Text("Error in FFprobe property "+property+" comparison for file "+inputMp3+
+                //write error message to log
+                log.info("Error in FFprobe property "+property+" comparison for file "+
                         "\nProperty for mp3 file: "+mp3FFprobeProperties.get(property)+
                         "\nProperty for wav file: "+wavFFprobeProperties.get(property));
             }
         }
-        //todo update output Text?
-        //output = new Text(output.toString()+"\nFFprobe property comparison successful");
+        log.info("FFprobe property comparison finished.");
         return exitCode;
     }
 
@@ -209,5 +232,26 @@ public class QAMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
         long maxDiffLong = Long.valueOf(maxDiff);
         return (diff < maxDiffLong);
+    }
+
+    /**
+     * Compare number of channels.
+     * Matches the compareChannels beanshell script of the FFprobe_Extract_Compare Taverna workflow.
+     * @param first first channels as String
+     * @param second second channels as String
+     * @return true if number of channels equal, false otherwise
+     */
+    public boolean compareChannels(String first, String second) {
+        if (first.trim().equalsIgnoreCase("stereo,") &&
+                second.trim().equalsIgnoreCase("2")) {
+            return true;
+        } else
+        if (second.trim().equalsIgnoreCase("stereo,") &&
+                first.trim().equalsIgnoreCase("2")) {
+            return true;
+        } else {
+            return first.trim().equalsIgnoreCase(second.trim());
+        }
+
     }
 }
