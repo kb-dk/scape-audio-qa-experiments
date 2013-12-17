@@ -2,6 +2,8 @@ package eu.scape_project.audio_qa;
 
 import eu.scape_project.audio_qa.AudioQASettings;
 import eu.scape_project.audio_qa.CLIToolRunner;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -19,6 +21,8 @@ import java.nio.file.Path;
  *
  */
 public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
+
+    private Log log = new Log4JLogger("MigrationMapper Log");
 
     @Override
     protected void map(LongWritable lineNo, Text inputMp3path, Context context) throws IOException, InterruptedException {
@@ -50,8 +54,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Te
         grandparent.setWritable(true, false);
           */
 
-        //System.out.println(outputDir);//todo logging
-
+        log.debug(outputDir);
         //write output directory to the output key text
         Text output = new Text(outputDir.toString());
 

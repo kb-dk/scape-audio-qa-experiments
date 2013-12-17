@@ -30,7 +30,6 @@ import java.util.Map;
  */
 public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
-    //TODO log where
     private Log log = new Log4JLogger("QAMapper Log");
 
     @Override
@@ -73,13 +72,29 @@ public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
             //compare the two ffprobe characterisations
             exitCode = ffprobeExtractCompare(wavFfprobeLogFileString, mp3FfprobeLogFileString);
-            //TODO what about the updates to the output Text
+            //TODO are there updates to the output Text?
         }
         //TODO run JHove2 on the wav file
-
         //TODO check JHove2 result. File format valid?
+        //Skip JHove2 for first version...
 
-        //TODO convert original mp3 to wav using mpg321 for comparison
+        //convert original mp3 to wav using mpg321 for comparison
+        if (exitCode == 0) {
+            String log = outputDir.getAbsolutePath() + "/" + inputMp3 + "_mpg321.log";
+            File logFile = new File(log);
+            logFile.setReadable(true, false);
+            logFile.setWritable(true, false);
+            String[] mpg321command = new String[5];
+            mpg321command[0] = "mpg321";
+            mpg321command[1] = "-w";
+            mpg321command[2] = inputMp3path.toString();
+            File outputwav = new File(outputDir.toString() + "/", inputMp3 + "_mpg321.wav");
+            outputwav.setReadable(true, false);
+            outputwav.setWritable(true, false);
+            mpg321command[3] = outputwav.getAbsolutePath();
+            exitCode = CLIToolRunner.runCLItool(mpg321command, log);
+        }
+
 
         //TODO run xcorrSound waveform-compare to compare the migrated wav and the converted comparison wav
 

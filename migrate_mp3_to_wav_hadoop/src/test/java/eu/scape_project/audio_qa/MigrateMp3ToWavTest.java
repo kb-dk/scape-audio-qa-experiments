@@ -8,6 +8,7 @@ import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +20,9 @@ import java.util.List;
  * See the <a href="https://cwiki.apache.org/confluence/display/MRUNIT/Index">MRUnit Wiki</a> for more information.
  */
 public class MigrateMp3ToWavTest {
-    MapReduceDriver<LongWritable, Text, Text, LongWritable, Text, LongWritable> mapReduceDriver;
-    MapDriver<LongWritable, Text, Text, LongWritable> mapDriver;
-    ReduceDriver<Text, LongWritable, Text, LongWritable> reduceDriver;
+    MapReduceDriver<LongWritable, Text, LongWritable, Text, LongWritable, Text> mapReduceDriver;
+    MapDriver<LongWritable, Text, LongWritable, Text> mapDriver;
+    ReduceDriver<LongWritable, Text, LongWritable, Text> reduceDriver;
 
     Text inputFilePath = new Text("/home/bam/Projects/scape-audio-qa/migrate_mp3_to_wav_workflow/src/main/samples/freestylemix_-_hisboyelroy_-_Revolve.mp3");
     Text outputdir = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve");
@@ -31,36 +32,36 @@ public class MigrateMp3ToWavTest {
         AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
         MigrationMapper mapper = new MigrationMapper();
         MigrateMp3ToWav.MigrationReducer reducer = new MigrateMp3ToWav.MigrationReducer();
-        mapDriver = new MapDriver<LongWritable, Text, Text, LongWritable>();
+        mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();
         mapDriver.setMapper(mapper);
-        reduceDriver = new ReduceDriver<Text, LongWritable, Text, LongWritable>();
+        reduceDriver = new ReduceDriver<LongWritable, Text, LongWritable, Text>();
         reduceDriver.setReducer(reducer);
-        mapReduceDriver = new MapReduceDriver<LongWritable, Text, Text, LongWritable, Text, LongWritable>();
+        mapReduceDriver = new MapReduceDriver<LongWritable, Text, LongWritable, Text, LongWritable, Text>();
         mapReduceDriver.setMapper(mapper);
         mapReduceDriver.setReducer(reducer);
     }
 
     @Test
-    public void testMapper() {
+    public void testMapper() throws IOException {
         mapDriver.withInput(new LongWritable(0), inputFilePath);
-        mapDriver.withOutput(outputdir, new LongWritable(0));
+        mapDriver.withOutput(new LongWritable(0), outputdir);
         mapDriver.runTest();
     }
 
     @Test
-    public void testReducer() {
-        List<LongWritable> values = new ArrayList<LongWritable>();
-        values.add(new LongWritable(0));
-        values.add(new LongWritable(0));
-        reduceDriver.withInput(outputdir, values);
-        reduceDriver.withOutput(outputdir, new LongWritable(0));
+    public void testReducer() throws IOException {
+        List<Text> values = new ArrayList<Text>();
+        values.add(outputdir);
+        //TODO test multiple values
+        reduceDriver.withInput(new LongWritable(0), values);
+        reduceDriver.withOutput(new LongWritable(0), new Text(outputdir.toString()+"\n"));
         reduceDriver.runTest();
     }
 
     @Test
-    public void testMapReduce() {
+    public void testMapReduce() throws IOException {
         mapReduceDriver.withInput(new LongWritable(0), inputFilePath);
-        mapReduceDriver.addOutput(outputdir, new LongWritable(0));
+        mapReduceDriver.addOutput(new LongWritable(0), new Text(outputdir.toString()+"\n"));
         mapReduceDriver.runTest();
     }
 }

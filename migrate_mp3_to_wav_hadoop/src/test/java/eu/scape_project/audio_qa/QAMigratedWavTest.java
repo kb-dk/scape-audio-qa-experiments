@@ -20,9 +20,9 @@ import java.util.List;
  * See the <a href="https://cwiki.apache.org/confluence/display/MRUNIT/Index">MRUnit Wiki</a> for more information.
  */
 public class QAMigratedWavTest {
-    MapReduceDriver<LongWritable, Text, Text, LongWritable, Text, LongWritable> mapReduceDriver;
-    MapDriver<LongWritable, Text, Text, LongWritable> mapDriver;
-    ReduceDriver<Text, LongWritable, Text, LongWritable> reduceDriver;
+    MapReduceDriver<LongWritable, Text, LongWritable, Text, LongWritable, Text> mapReduceDriver;
+    MapDriver<LongWritable, Text, LongWritable, Text> mapDriver;
+    ReduceDriver<LongWritable, Text, LongWritable, Text> reduceDriver;
 
     Text inputFilePath = new Text("/home/bam/Projects/scape-audio-qa/migrate_mp3_to_wav_workflow/src/main/samples/freestylemix_-_hisboyelroy_-_Revolve.mp3");
     Text outputdir = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve");
@@ -33,23 +33,24 @@ public class QAMigratedWavTest {
     public void setUp() {
         AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
         QAMapper mapper = new QAMapper();
-        QAMigratedWav.QAReducer reducer = new QAMigratedWav.QAReducer();
-        mapDriver = new MapDriver<LongWritable, Text, Text, LongWritable>();
+        //QAMigratedWav.QAReducer reducer = new QAMigratedWav.QAReducer();
+        mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();
         mapDriver.setMapper(mapper);
-        reduceDriver = new ReduceDriver<Text, LongWritable, Text, LongWritable>();
-        reduceDriver.setReducer(reducer);
-        mapReduceDriver = new MapReduceDriver<LongWritable, Text, Text, LongWritable, Text, LongWritable>();
+        reduceDriver = new ReduceDriver<LongWritable, Text, LongWritable, Text>();
+        //reduceDriver.setReducer(reducer);
+        mapReduceDriver = new MapReduceDriver<LongWritable, Text, LongWritable, Text, LongWritable, Text>();
         mapReduceDriver.setMapper(mapper);
-        mapReduceDriver.setReducer(reducer);
+        //mapReduceDriver.setReducer(reducer);
     }
 
     @Test
     public void testMapper() throws IOException {
         mapDriver.withInput(new LongWritable(0), inputFilePath);
-        mapDriver.withOutput(outputdir, new LongWritable(0));
+        mapDriver.withOutput(new LongWritable(0), outputdir);
         mapDriver.runTest();
     }
 
+    /* TODO update tests to chainmapper
     @Test
     public void testReducer() throws IOException {
         List<LongWritable> values = new ArrayList<LongWritable>();
@@ -66,4 +67,5 @@ public class QAMigratedWavTest {
         mapReduceDriver.addOutput(qaOutput, new LongWritable(0));
         mapReduceDriver.runTest();
     }
+    */
 }
