@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,23 +47,24 @@ public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
         //what is the file-specific working directory
         File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
         //write output directory and input mp3 to the output key text
-        Text output = new Text("outputDir: "+outputDir.toString());
-        output = new Text(output.toString()+"\ninputMp3: "+inputMp3);
+        Text output = new Text(outputDir.toString());
         log.debug("outputDir="+outputDir);
+        System.out.println(outputDir);
 
         //where is the wav, that we are performing qa on?
         File wav = new File(outputDir.toString() + "/", inputMp3 + "_ffmpeg.wav");
         log.debug("wav="+wav);
+        System.out.println(wav);
 
         //ffprobe the wav file
         String wavFfprobeLogFileString = wav.getAbsolutePath() + "_ffprobe.log";
         log.debug("wavFfprobeLogFileString="+wavFfprobeLogFileString);
+        System.out.println(wavFfprobeLogFileString);
         String [] ffprobeCommand = new String[2];
         ffprobeCommand[0] = "ffprobe";
         ffprobeCommand[1] = wav.toString();
         int exitCode = CLIToolRunner.runCLItool(ffprobeCommand, wavFfprobeLogFileString);
         File outputFile = new File(wavFfprobeLogFileString);
-        log.debug("outputFile="+outputFile);
         outputFile.setReadable(true, false);
         outputFile.setWritable(true, false);
 
@@ -80,21 +82,23 @@ public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
         //convert original mp3 to wav using mpg321 for comparison
         if (exitCode == 0) {
-            String log = outputDir.getAbsolutePath() + "/" + inputMp3 + "_mpg321.log";
-            File logFile = new File(log);
+            String mpg321log = outputDir.getAbsolutePath() + "/" + inputMp3 + "_mpg321.log";
+            log.debug("mpg321log="+mpg321log);
+            System.out.println(mpg321log);
+            File logFile = new File(mpg321log);
             logFile.setReadable(true, false);
             logFile.setWritable(true, false);
-            String[] mpg321command = new String[5];
+            String[] mpg321command = new String[4];
             mpg321command[0] = "mpg321";
             mpg321command[1] = "-w";
-            mpg321command[2] = inputMp3path.toString();
             File outputwav = new File(outputDir.toString() + "/", inputMp3 + "_mpg321.wav");
             outputwav.setReadable(true, false);
             outputwav.setWritable(true, false);
-            mpg321command[3] = outputwav.getAbsolutePath();
-            exitCode = CLIToolRunner.runCLItool(mpg321command, log);
+            mpg321command[2] = outputwav.getAbsolutePath();
+            mpg321command[3] = inputMp3path.toString();
+            System.out.println(Arrays.toString(mpg321command));
+            exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log);
         }
-
 
         //TODO run xcorrSound waveform-compare to compare the migrated wav and the converted comparison wav
 

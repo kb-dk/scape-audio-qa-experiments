@@ -72,8 +72,8 @@ public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Te
 
         //next migrate with ffmpeg
         if (exitCode == 0) {
-            String log = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
-            File logFile = new File(log);
+            String ffmpeglog = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
+            File logFile = new File(ffmpeglog);
             logFile.setReadable(true, false);
             logFile.setWritable(true, false);
             String[] ffmpegcommand = new String[5];
@@ -85,7 +85,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Te
             outputwav.setReadable(true, false);
             outputwav.setWritable(true, false);
             ffmpegcommand[4] = outputwav.getAbsolutePath();
-            exitCode = CLIToolRunner.runCLItool(ffmpegcommand, log);
+            exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog);
         }
 
         context.write(new LongWritable(exitCode), output);
