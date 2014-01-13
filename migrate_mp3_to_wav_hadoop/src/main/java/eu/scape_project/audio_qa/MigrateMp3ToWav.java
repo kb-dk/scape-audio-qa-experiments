@@ -50,10 +50,17 @@ public class MigrateMp3ToWav extends Configured implements Tool {
     public int run(String[] args) throws Exception {
         Configuration configuration = getConf();
 
-        Job job = new Job(configuration);//Job.getInstance(configuration);
-        job.setJobName("chain");
-        job.setInputFormatClass(TextInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class);
+        Job job = Job.getInstance(configuration);
+        job.setJarByClass(MigrateMp3ToWav.class);
+        //job.setJobName("chain");
+
+        int n = args.length;
+        if (n > 0)
+            TextInputFormat.addInputPath(job, new Path(args[0]));
+        if (n > 1)
+            SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+        if (n > 2)
+            configuration.set("map.outputdir", args[2]);
 
         ChainMapper.addMapper(job, MigrationMapper.class,
                 LongWritable.class, Text.class, LongWritable.class, Text.class,  configuration);
@@ -65,13 +72,11 @@ public class MigrateMp3ToWav extends Configured implements Tool {
                 LongWritable.class, Text.class, LongWritable.class, Text.class, configuration);*/
         job.setReducerClass(MigrationReducer.class);
 
-        int n = args.length;
-        if (n > 0)
-            TextInputFormat.addInputPath(job, new Path(args[0]));
-        if (n > 1)
-            SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
-        if (n > 2)
-            configuration.set("map.outputdir", args[2]);
+        job.setInputFormatClass(TextInputFormat.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
+
+        job.setOutputKeyClass(LongWritable.class);
+        job.setOutputValueClass(Text.class);
 
         job.setNumReduceTasks(1);
         return job.waitForCompletion(true) ? 0 : -1;
