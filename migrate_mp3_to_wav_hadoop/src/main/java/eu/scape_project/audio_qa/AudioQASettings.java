@@ -12,5 +12,6 @@ public class AudioQASettings {
      * Default workflow output directory on HDFS.
      */
     public static String OUTPUT_DIR =
+            //SB SCAPE isilon hadoop cluster default output dir
             "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
 }

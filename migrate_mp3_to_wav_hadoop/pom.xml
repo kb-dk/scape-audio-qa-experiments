@@ -100,6 +100,7 @@
                     <archive>
                         <manifest>
                             <mainClass>eu.scape_project.audio_qa.MigrateMp3ToWav</mainClass>
+                            <mainClass>eu.scape_project.audio_qa.ffmpeg_migrate.FfmpegMigrate</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
