@@ -1,4 +1,4 @@
-package eu.scape_project.audio_qa.ffmpeg_migrate;
+package eu.scape_project.audio_qa.mpg321_convert;
 
 import eu.scape_project.audio_qa.AudioQASettings;
 import eu.scape_project.audio_qa.CLIToolRunner;
@@ -12,19 +12,25 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * The map function of FfmpegMigrationMapper migrates the mp3 files referenced in input to wav using ffmpeg.
+ * The map function of Mpg321ConversionMapper converts the mp3 files referenced in input to wav using mpg321.
  * The map function returns the path to output directory with the result files.
  *
  * The input is a line number as key (not used) and a Text line, which we assume is the path to an mp3 file.
  * The output is an exit code (not used), and the path to an output directory.
  *
- * eu.scape_project.audio_qa.ffmpeg_migrate
+ * eu.scape_project.audio_qa.mpg321_convert
  * User: baj@statsbiblioteket.dk
- * Date: 2014-01-14
+ * Date: 2014-01-15
  */
-public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
+public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
-    private Log log = new Log4JLogger("FfmpegMigrationMapper Log");
+    public static final String MPG321 = "mpg321";
+    public static final String SLASH = "/";
+    public static final String UNDERSCORE = "_";
+    public static final String DOTLOG = ".log";
+    public static final String DOTWAV = ".wav";
+
+    private Log log = new Log4JLogger("Mpg321ConversionMapper Log");
 
     @Override
     protected void map(LongWritable lineNo, Text inputMp3path, Context context) throws IOException, InterruptedException {
@@ -46,21 +52,20 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         //write output directory to the output key text
         Text output = new Text(outputDir.toString());
 
-        //migrate with ffmpeg
-        String ffmpeglog = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
-        File logFile = new File(ffmpeglog);
+        //convert with mpg321
+        String mpg321log = outputDir.getAbsolutePath() + SLASH + inputMp3 + UNDERSCORE + MPG321 + DOTLOG;
+        File logFile = new File(mpg321log);
         logFile.setReadable(true, false);
         logFile.setWritable(true, false);
-        String[] ffmpegcommand = new String[5];
-        ffmpegcommand[0] = "ffmpeg";
-        ffmpegcommand[1] = "-y";
-        ffmpegcommand[2] = "-i";
-        ffmpegcommand[3] = inputMp3path.toString();
-        File outputwav = new File(outputDir.toString() + "/", inputMp3 + "_ffmpeg.wav");
+        String[] mpg321command = new String[4];
+        mpg321command[0] = MPG321;
+        mpg321command[1] = "-w";
+        File outputwav = new File(outputDir.toString() + SLASH, inputMp3 + UNDERSCORE + MPG321 + DOTWAV);
         outputwav.setReadable(true, false);
         outputwav.setWritable(true, false);
-        ffmpegcommand[4] = outputwav.getAbsolutePath();
-        int exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog);
+        mpg321command[2] = outputwav.getAbsolutePath();
+        mpg321command[3] = inputMp3path.toString();
+        int exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log);
 
         context.write(new LongWritable(exitCode), output);
     }

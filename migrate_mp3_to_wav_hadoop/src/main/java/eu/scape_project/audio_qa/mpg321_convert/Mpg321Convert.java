@@ -1,4 +1,4 @@
-package eu.scape_project.audio_qa.ffmpeg_migrate;
+package eu.scape_project.audio_qa.mpg321_convert;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -19,10 +19,10 @@ import java.io.IOException;
  * Create the map-reduce job for migrating the mp3 files on the given input list using ffmpeg.
  * eu.scape_project.audio_qa.ffmpeg_migrate
  * User: baj@statsbiblioteket.dk
- * Date: 2014-01-14
+ * Date: 2014-01-15
  */
-public class FfmpegMigrate  extends Configured implements Tool {
-    static public class FfmpegMigrationReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
+public class Mpg321Convert extends Configured implements Tool {
+    static public class Mpg321ConversionReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
 
         @Override
         protected void reduce(LongWritable exitCode, Iterable<Text> outputs, Context context)
@@ -39,7 +39,7 @@ public class FfmpegMigrate  extends Configured implements Tool {
         Configuration configuration = getConf();
 
         Job job = Job.getInstance(configuration);
-        job.setJarByClass(FfmpegMigrate.class);
+        job.setJarByClass(Mpg321Convert.class);
 
         int n = args.length;
         if (n > 0)
@@ -49,8 +49,8 @@ public class FfmpegMigrate  extends Configured implements Tool {
         if (n > 2)
             configuration.set("map.outputdir", args[2]);
 
-        job.setMapperClass(FfmpegMigrationMapper.class);
-        job.setReducerClass(FfmpegMigrationReducer.class);
+        job.setMapperClass(Mpg321ConversionMapper.class);
+        job.setReducerClass(Mpg321ConversionReducer.class);
 
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
@@ -63,6 +63,6 @@ public class FfmpegMigrate  extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        System.exit(ToolRunner.run(new FfmpegMigrate(), args));
+        System.exit(ToolRunner.run(new Mpg321Convert(), args));
     }
 }
