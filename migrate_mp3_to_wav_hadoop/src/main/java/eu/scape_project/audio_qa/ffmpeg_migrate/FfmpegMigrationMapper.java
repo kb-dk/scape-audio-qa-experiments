@@ -38,13 +38,16 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
         File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
-        outputDir.mkdirs();
-        outputDir.setReadable(true, false);
-        outputDir.setWritable(true, false);
-
-        log.debug(outputDir);
         //write output directory to the output key text
         Text output = new Text(outputDir.toString());
+        log.debug(outputDir);
+        boolean succesfull = outputDir.mkdirs();
+        if (!succesfull) {
+            context.write(new LongWritable(-1), output);
+            return;
+        }// 2014-01-14 problem bolette-ubuntu: cannot create outputdir
+        outputDir.setReadable(true, false);
+        outputDir.setWritable(true, false);
 
         //migrate with ffmpeg
         String ffmpeglog = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
