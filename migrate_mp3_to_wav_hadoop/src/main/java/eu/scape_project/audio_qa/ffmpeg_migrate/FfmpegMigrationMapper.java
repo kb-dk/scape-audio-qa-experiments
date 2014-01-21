@@ -41,11 +41,15 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         //write output directory to the output key text
         Text output = new Text(outputDir.toString());
         log.debug(outputDir);
+        System.out.println(outputDir.getAbsolutePath());
         boolean succesfull = outputDir.mkdirs();
-        if (!succesfull) {
+        log.debug("outputDir.mkdirs() successfull = " + succesfull);
+        System.out.println("outputDir.mkdirs() successfull = " + succesfull);
+        /*if (!succesfull) {
             context.write(new LongWritable(-1), output);
             return;
-        }// 2014-01-14 problem bolette-ubuntu: cannot create outputdir
+        }*/
+        // 2014-01-14 problem bolette-ubuntu: cannot create outputdir
         outputDir.setReadable(true, false);
         outputDir.setWritable(true, false);
 

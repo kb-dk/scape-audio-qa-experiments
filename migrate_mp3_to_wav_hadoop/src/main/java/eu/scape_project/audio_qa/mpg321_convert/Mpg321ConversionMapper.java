@@ -24,12 +24,6 @@ import java.io.IOException;
  */
 public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
 
-    public static final String MPG321 = "mpg321";
-    public static final String SLASH = "/";
-    public static final String UNDERSCORE = "_";
-    public static final String DOTLOG = ".log";
-    public static final String DOTWAV = ".wav";
-
     private Log log = new Log4JLogger("Mpg321ConversionMapper Log");
 
     @Override
@@ -53,14 +47,14 @@ public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWrita
         Text output = new Text(outputDir.toString());
 
         //convert with mpg321
-        String mpg321log = outputDir.getAbsolutePath() + SLASH + inputMp3 + UNDERSCORE + MPG321 + DOTLOG;
+        String mpg321log = outputDir.getAbsolutePath() + AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTLOG;
         File logFile = new File(mpg321log);
         logFile.setReadable(true, false);
         logFile.setWritable(true, false);
         String[] mpg321command = new String[4];
-        mpg321command[0] = MPG321;
+        mpg321command[0] = AudioQASettings.MPG321;
         mpg321command[1] = "-w";
-        File outputwav = new File(outputDir.toString() + SLASH, inputMp3 + UNDERSCORE + MPG321 + DOTWAV);
+        File outputwav = new File(outputDir.toString() + AudioQASettings.SLASH, inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTWAV);
         outputwav.setReadable(true, false);
         outputwav.setWritable(true, false);
         mpg321command[2] = outputwav.getAbsolutePath();
