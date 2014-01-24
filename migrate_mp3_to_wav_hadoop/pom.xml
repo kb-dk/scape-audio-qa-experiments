@@ -97,12 +97,12 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <archive>
+                    <!--<archive>
                         <manifest>
                             <mainClass>eu.scape_project.audio_qa.MigrateMp3ToWav</mainClass>
                             <mainClass>eu.scape_project.audio_qa.ffmpeg_migrate.FfmpegMigrate</mainClass>
                         </manifest>
-                    </archive>
+                    </archive>-->
                 </configuration>
                 <executions>
                     <execution>

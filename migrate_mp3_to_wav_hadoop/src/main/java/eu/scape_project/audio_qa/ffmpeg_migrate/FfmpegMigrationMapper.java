@@ -53,19 +53,18 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
 
         //migrate with ffmpeg
         String ffmpeglog = outputDirPath + "/" + inputMp3 + "_ffmpeg.log";
-        File logFile = new File(ffmpeglog);
-        logFile.setReadable(true, false);
-        logFile.setWritable(true, false);
+        //fs.create(new Path(ffmpeglog));
         String[] ffmpegcommand = new String[5];
         ffmpegcommand[0] = "ffmpeg";
         ffmpegcommand[1] = "-y";
         ffmpegcommand[2] = "-i";
         ffmpegcommand[3] = inputMp3path.toString();
-        File outputwav = new File(outputDirPath + "/", inputMp3 + "_ffmpeg.wav");
-        outputwav.setReadable(true, false);
-        outputwav.setWritable(true, false);
-        ffmpegcommand[4] = outputwav.getAbsolutePath();
-        int exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog);
+        String outputwav = outputDirPath + "/" + inputMp3 + "_ffmpeg.wav";
+        //File outputwav = new File(outputDirPath + "/", inputMp3 + "_ffmpeg.wav");
+        //outputwav.setReadable(true, false);
+        //outputwav.setWritable(true, false);
+        ffmpegcommand[4] = outputwav;
+        int exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog, fs);
 
         context.write(new LongWritable(exitCode), output);
     }

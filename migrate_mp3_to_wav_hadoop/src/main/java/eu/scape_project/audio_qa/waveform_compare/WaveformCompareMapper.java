@@ -4,6 +4,8 @@ import eu.scape_project.audio_qa.AudioQASettings;
 import eu.scape_project.audio_qa.CLIToolRunner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -55,31 +57,32 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
         outputFileName = outputFileNameTMpSplit[outputFileNameTMpSplit.length-1];
         outputFileName = outputFileName + AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG;
         //create a hadoop-job-specific output dir
-        File outputDir;
+        String outputDirPath;
         if (context.getJobID()==null) {
-            outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR),
-                    context.getConfiguration().get("job.jobID", AudioQASettings.DEFAULT_JOBID));
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) +
+                    context.getConfiguration().get("job.jobID", AudioQASettings.DEFAULT_JOBID);
         } else {
-            outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR),
-                    context.getJobID().toString());
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) +
+                    context.getJobID().toString();
         }
-        File logFile = new File(outputDir, outputFileName);
-        logFile.setReadable(true, false);
-        logFile.setWritable(true, false);
+        String logFilePath = outputDirPath + outputFileName;
+        //logFile.setReadable(true, false);
+        //logFile.setWritable(true, false);
         Text output = new Text(outputFileName);
 
-
-        outputDir.mkdirs();
-        outputDir.setReadable(true, false);
-        outputDir.setWritable(true, false);
-        log.debug(outputDir);
+        FileSystem fs = FileSystem.get(context.getConfiguration());
+        boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
+        //outputDir.mkdirs();
+        //outputDir.setReadable(true, false);
+        //outputDir.setWritable(true, false);
+        log.debug(outputDirPath);
 
         //compare wav file content with waveform-compare
         String[] wavCompareCommand = new String[3];
         wavCompareCommand[0] = "waveform-compare";
         wavCompareCommand[1] = inputWav1;
         wavCompareCommand[2] = inputWav2;
-        int exitCode = CLIToolRunner.runCLItool(wavCompareCommand, logFile.toString());
+        int exitCode = CLIToolRunner.runCLItool(wavCompareCommand, logFilePath, fs);
 
         context.write(new LongWritable(exitCode), output);
     }

@@ -4,6 +4,8 @@ import eu.scape_project.audio_qa.AudioQASettings;
 import eu.scape_project.audio_qa.CLIToolRunner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -37,29 +39,31 @@ public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWrita
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
-        outputDir.mkdirs();
-        outputDir.setReadable(true, false);
-        outputDir.setWritable(true, false);
+        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) + inputMp3Name;
+        //outputDir.mkdirs();
+        //outputDir.setReadable(true, false);
+        //outputDir.setWritable(true, false);
+        FileSystem fs = FileSystem.get(context.getConfiguration());
+        boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
 
-        log.debug(outputDir);
+        log.debug(outputDirPath);
         //write output directory to the output key text
-        Text output = new Text(outputDir.toString());
+        Text output = new Text(outputDirPath);
 
         //convert with mpg321
-        String mpg321log = outputDir.getAbsolutePath() + AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTLOG;
-        File logFile = new File(mpg321log);
-        logFile.setReadable(true, false);
-        logFile.setWritable(true, false);
+        String mpg321log = outputDirPath + AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTLOG;
+        //File logFile = new File(mpg321log);
+        //logFile.setReadable(true, false);
+        //logFile.setWritable(true, false);
         String[] mpg321command = new String[4];
         mpg321command[0] = AudioQASettings.MPG321;
         mpg321command[1] = "-w";
-        File outputwav = new File(outputDir.toString() + AudioQASettings.SLASH, inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTWAV);
-        outputwav.setReadable(true, false);
-        outputwav.setWritable(true, false);
-        mpg321command[2] = outputwav.getAbsolutePath();
+        String outputwavPath = outputDirPath + AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTWAV;
+        //outputwav.setReadable(true, false);
+        //outputwav.setWritable(true, false);
+        mpg321command[2] = outputwavPath;
         mpg321command[3] = inputMp3path.toString();
-        int exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log);
+        int exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log, fs);
 
         context.write(new LongWritable(exitCode), output);
     }

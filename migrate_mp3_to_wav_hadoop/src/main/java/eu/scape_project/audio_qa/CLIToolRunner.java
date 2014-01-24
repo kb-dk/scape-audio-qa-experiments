@@ -1,5 +1,7 @@
 package eu.scape_project.audio_qa;
 
+import org.apache.hadoop.fs.*;
+
 import java.io.*;
 
 /**
@@ -9,7 +11,7 @@ import java.io.*;
  * Time: 11:57 AM
  */
 public class CLIToolRunner {
-    public static int runCLItool(String[] commandline, String logFile) throws IOException {
+    public static int runCLItool(String[] commandline, String logFile, FileSystem fs) throws IOException {
         ProcessBuilder pb = new ProcessBuilder(commandline);
         //start the executable
         Process proc = pb.start();
@@ -31,11 +33,16 @@ public class CLIToolRunner {
             stderrString += stderr.readLine() + "\n";
         }
 
-        BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
+        //TODO
         //write log of stdout and stderr to the log file
-        logFileWriter.write(stdoutString + stderrString);
-        logFileWriter.newLine();
-        logFileWriter.close();
+        FSDataOutputStream out = fs.create(new Path(logFile));
+        out.writeBytes(stdoutString + stderrString);
+        out.flush();
+        out.close();
+        //BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
+        //logFileWriter.write(stdoutString + stderrString);
+        //logFileWriter.newLine();
+        //logFileWriter.close();
         return exitCode;
     }
 }

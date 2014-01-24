@@ -28,8 +28,7 @@ public class WaveformCompareTest {
     Text inputText = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve/" +
             "freestylemix_-_hisboyelroy_-_Revolve.mp3_ffmpeg.wav    output/MigrateMp3ToWav/" +
             "freestylemix_-_hisboyelroy_-_Revolve/freestylemix_-_hisboyelroy_-_Revolve.mp3_mpg321.wav");
-    Text outputText = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve/" +
-            "freestylemix_-_hisboyelroy_-_Revolve.mp3_" + AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG);
+    Text outputText = new Text("freestylemix_-_hisboyelroy_-_Revolve.mp3_" + AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG);
 
     @Before
     public void setUp() {
