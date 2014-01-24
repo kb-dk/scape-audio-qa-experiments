@@ -4,6 +4,8 @@ import eu.scape_project.audio_qa.AudioQASettings;
 import eu.scape_project.audio_qa.CLIToolRunner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -37,24 +39,20 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
-        //write output directory to the output key text
-        Text output = new Text(outputDir.toString());
-        log.debug(outputDir);
-        System.out.println(outputDir.getAbsolutePath());
-        boolean succesfull = outputDir.mkdirs();
-        log.debug("outputDir.mkdirs() successfull = " + succesfull);
+        //File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
+        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) + inputMp3Name;
+        //write output directory path to the output key text
+        Text output = new Text(outputDirPath);
+        log.debug(outputDirPath);
+        System.out.println(outputDirPath);
+
+        FileSystem fs = FileSystem.get(context.getConfiguration());
+        boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
+        log.debug("fs.mkdirs() successfull = " + succesfull);
         System.out.println("outputDir.mkdirs() successfull = " + succesfull);
-        /*if (!succesfull) {
-            context.write(new LongWritable(-1), output);
-            return;
-        }*/
-        // 2014-01-14 problem bolette-ubuntu: cannot create outputdir
-        outputDir.setReadable(true, false);
-        outputDir.setWritable(true, false);
 
         //migrate with ffmpeg
-        String ffmpeglog = outputDir.getAbsolutePath() + "/" + inputMp3 + "_ffmpeg.log";
+        String ffmpeglog = outputDirPath + "/" + inputMp3 + "_ffmpeg.log";
         File logFile = new File(ffmpeglog);
         logFile.setReadable(true, false);
         logFile.setWritable(true, false);
@@ -63,7 +61,7 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         ffmpegcommand[1] = "-y";
         ffmpegcommand[2] = "-i";
         ffmpegcommand[3] = inputMp3path.toString();
-        File outputwav = new File(outputDir.toString() + "/", inputMp3 + "_ffmpeg.wav");
+        File outputwav = new File(outputDirPath + "/", inputMp3 + "_ffmpeg.wav");
         outputwav.setReadable(true, false);
         outputwav.setWritable(true, false);
         ffmpegcommand[4] = outputwav.getAbsolutePath();
