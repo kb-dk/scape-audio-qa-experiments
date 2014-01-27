@@ -39,10 +39,10 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        //File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR), inputMp3Name);
-        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) + inputMp3Name;
+        //File outputDir = new File(context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR), inputMp3Name);
+        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) + inputMp3Name;
         //write output directory path to the output key text
-        Text output = new Text(outputDirPath);
+        Text output = new Text(outputDirPath);//todo fix output Text
         log.debug(outputDirPath);
         System.out.println(outputDirPath);
 
@@ -59,7 +59,7 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         ffmpegcommand[1] = "-y";
         ffmpegcommand[2] = "-i";
         ffmpegcommand[3] = inputMp3path.toString();
-        String outputwav = outputDirPath + "/" + inputMp3 + "_ffmpeg.wav";
+        String outputwav = AudioQASettings.TOOL_OUTPUT_DIR + "/" + inputMp3 + "_ffmpeg.wav";
         //File outputwav = new File(outputDirPath + "/", inputMp3 + "_ffmpeg.wav");
         //outputwav.setReadable(true, false);
         //outputwav.setWritable(true, false);

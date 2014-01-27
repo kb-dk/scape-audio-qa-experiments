@@ -29,7 +29,7 @@ public class MigrateMp3ToWavTest {
 
     @Before
     public void setUp() {
-        AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
+        AudioQASettings.MAPPER_OUTPUT_DIR = "output/MigrateMp3ToWav/";
         MigrationMapper mapper = new MigrationMapper();
         MigrateMp3ToWav.MigrationReducer reducer = new MigrateMp3ToWav.MigrationReducer();
         mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();

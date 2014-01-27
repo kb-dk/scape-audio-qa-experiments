@@ -12,6 +12,8 @@ import java.io.*;
  */
 public class CLIToolRunner {
     public static int runCLItool(String[] commandline, String logFile, FileSystem fs) throws IOException {
+        // todo localize parameters??? or use tomar???
+
         ProcessBuilder pb = new ProcessBuilder(commandline);
         //start the executable
         Process proc = pb.start();

@@ -59,10 +59,10 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
         //create a hadoop-job-specific output dir
         String outputDirPath;
         if (context.getJobID()==null) {
-            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) +
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
                     context.getConfiguration().get("job.jobID", AudioQASettings.DEFAULT_JOBID);
         } else {
-            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) +
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
                     context.getJobID().toString();
         }
         String logFilePath = outputDirPath + outputFileName;

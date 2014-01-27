@@ -24,7 +24,7 @@ import java.util.Map;
  * The map function works in the input directory and returns only "QA passed true/false".
  *
  * The input is a line number as key (not used) and a Text line, which we assume is the path to the
- * original mp3. We further assume that the input migrated wav is in the AudioQASettings.OUTPUT_DIR/"mp3-name"
+ * original mp3. We further assume that the input migrated wav is in the AudioQASettings.MAPPER_OUTPUT_DIR/"mp3-name"
  * directory.
  * TODO Text Text input is better (input mp3, working directory with migrated wav and mp3 ffprobe output)
  * The output is a boolean as Text "QA passed true/false", and an exit code (not used).
@@ -46,7 +46,7 @@ public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
         //what is the file-specific working directory
-        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) + inputMp3Name;
+        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) + inputMp3Name;
         //write output directory and input mp3 to the output key text
         Text output = new Text(outputDirPath);
         log.debug("outputDir="+outputDirPath);

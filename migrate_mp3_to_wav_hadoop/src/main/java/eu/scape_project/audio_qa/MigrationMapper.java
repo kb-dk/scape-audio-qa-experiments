@@ -34,7 +34,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Te
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) + inputMp3Name;
+        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) + inputMp3Name;
         FileSystem fs = FileSystem.get(context.getConfiguration());
         boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
         //outputDir.mkdirs();

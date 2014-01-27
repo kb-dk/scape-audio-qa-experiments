@@ -32,7 +32,7 @@ public class WaveformCompareTest {
 
     @Before
     public void setUp() {
-        AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
+        AudioQASettings.MAPPER_OUTPUT_DIR = "output/MigrateMp3ToWav/";
         WaveformCompareMapper mapper = new WaveformCompareMapper();
         WaveformCompare.WaveformCompareReducer reducer = new WaveformCompare.WaveformCompareReducer();
         mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();

@@ -30,7 +30,7 @@ public class FfmpegMigrateTest {
 
     @Before
     public void setUp() {
-        AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
+        AudioQASettings.MAPPER_OUTPUT_DIR = "output/MigrateMp3ToWav/";
         FfmpegMigrationMapper mapper = new FfmpegMigrationMapper();
         FfmpegMigrate.FfmpegMigrationReducer reducer = new FfmpegMigrate.FfmpegMigrationReducer();
         mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();

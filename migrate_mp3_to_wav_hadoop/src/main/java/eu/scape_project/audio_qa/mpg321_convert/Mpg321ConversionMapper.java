@@ -39,7 +39,7 @@ public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWrita
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.OUTPUT_DIR) + inputMp3Name;
+        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) + inputMp3Name;
         //outputDir.mkdirs();
         //outputDir.setReadable(true, false);
         //outputDir.setWritable(true, false);

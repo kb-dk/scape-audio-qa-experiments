@@ -31,7 +31,7 @@ public class QAMigratedWavTest {
 
     @Before
     public void setUp() {
-        AudioQASettings.OUTPUT_DIR = "output/MigrateMp3ToWav/";
+        AudioQASettings.MAPPER_OUTPUT_DIR = "output/MigrateMp3ToWav/";
         QAMapper mapper = new QAMapper();
         //QAMigratedWav.QAReducer reducer = new QAMigratedWav.QAReducer();
         mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();
