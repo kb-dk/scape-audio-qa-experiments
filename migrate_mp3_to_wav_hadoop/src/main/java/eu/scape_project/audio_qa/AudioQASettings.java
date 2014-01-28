@@ -21,8 +21,11 @@ public class AudioQASettings {
     /**
      * Default workflow output directory on HDFS.
      */
-    public static String MAPPER_OUTPUT_DIR = "hdfs:///user/bolette/output/test-output/MigrateMp3ToWav/";
-    public static String TOOL_OUTPUT_DIR = "/home/bolette/TestOutput/";
+    public static String MAPPER_OUTPUT_DIR = "baj/out/";//baj SB Hadoop cluster setting
+            //"hdfs:///user/bolette/output/test-output/MigrateMp3ToWav/";//bolette-ubuntu setting
+    public static String TOOL_OUTPUT_DIR = "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/";
+                    //"/home/scape/working/bam/hadoop/out";//baj SB scape@iapetus setting
+            //"/home/bolette/TestOutput/";//bolette-ubuntu setting
             //TODO fix local hadoop working directory bolette-ubuntu
             //"/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
     public static String DEFAULT_JOBID = "test-default-jobid";
