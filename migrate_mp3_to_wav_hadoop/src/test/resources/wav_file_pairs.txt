@@ -1,0 +1,4 @@
+/home/bolette/TestOutput/freestylemix_-_hisboyelroy_-_Revolve.mp3_ffmpeg.wav    /home/bolette/TestOutput/freestylemix_-_hisboyelroy_-_Revolve.mp3_mpg321.wav
+/home/bolette/TestOutput/Loveshadow_-_The_Sweetest_Sin.mp3_ffmpeg.wav   /home/bolette/TestOutput/Loveshadow_-_The_Sweetest_Sin.mp3_mpg321.wav
+/home/bolette/TestOutput/Mixro_-_CCmixter.org.mp3_ffmpeg.wav    /home/bolette/TestOutput/Mixro_-_CCmixter.org.mp3_mpg321.wav
+/home/bolette/TestOutput/Zapac_-_Test_Drive.mp3_ffmpeg.wav  /home/bolette/TestOutput/Zapac_-_Test_Drive.mp3_mpg321.wav

@@ -65,7 +65,7 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
             outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
                     context.getJobID().toString();
         }
-        String logFilePath = outputDirPath + outputFileName;
+        String logFilePath = outputDirPath + AudioQASettings.SLASH + outputFileName;
         //logFile.setReadable(true, false);
         //logFile.setWritable(true, false);
         Text output = new Text(outputFileName);

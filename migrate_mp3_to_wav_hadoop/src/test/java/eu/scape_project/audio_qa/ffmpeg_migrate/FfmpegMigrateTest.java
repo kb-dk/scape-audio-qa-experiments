@@ -26,12 +26,12 @@ public class FfmpegMigrateTest {
     ReduceDriver<LongWritable, Text, LongWritable, Text> reduceDriver;
 
     Text inputFilePath = new Text("/home/bolette/Projects/scape-audio-qa/migrate_mp3_to_wav_workflow/src/main/samples/freestylemix_-_hisboyelroy_-_Revolve.mp3");
-    Text outputdir = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve");
+    Text outputdir = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve.mp3_ffmpeg.wav");
 
     @Before
     public void setUp() {
-        AudioQASettings.MAPPER_OUTPUT_DIR = "output/MigrateMp3ToWav/";
-        AudioQASettings.TOOL_OUTPUT_DIR = "output/MigrateMp3ToWav/";
+        AudioQASettings.MAPPER_OUTPUT_DIR = "output/MigrateMp3ToWav";
+        AudioQASettings.TOOL_OUTPUT_DIR = "output/MigrateMp3ToWav";
         FfmpegMigrationMapper mapper = new FfmpegMigrationMapper();
         FfmpegMigrate.FfmpegMigrationReducer reducer = new FfmpegMigrate.FfmpegMigrationReducer();
         mapDriver = new MapDriver<LongWritable, Text, LongWritable, Text>();

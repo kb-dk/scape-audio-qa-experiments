@@ -5,7 +5,6 @@ package eu.scape_project.audio_qa;
  * eu.scape_project
  * User: baj@statsbiblioteket.dk
  * Date: 8/6/13
- * Time: 11:37 AM
  */
 public class AudioQASettings {
 
@@ -19,14 +18,19 @@ public class AudioQASettings {
     public static final String DOTWAV = ".wav";
 
     /**
-     * Default workflow output directory on HDFS.
+     * Default workflow output directories on HDFS and NFS.
+     * TODO put all results on NFS
      */
-    public static String MAPPER_OUTPUT_DIR = "baj/out/";//baj SB Hadoop cluster setting
+    public static String MAPPER_OUTPUT_DIR = "hdfs:///user/bolette/output/test-output/MigrateMp3ToWav/";//bolette-ubuntu setting
+            //"baj/out/";//baj SB Hadoop cluster setting
             //"hdfs:///user/bolette/output/test-output/MigrateMp3ToWav/";//bolette-ubuntu setting
-    public static String TOOL_OUTPUT_DIR = "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/";
-                    //"/home/scape/working/bam/hadoop/out";//baj SB scape@iapetus setting
-            //"/home/bolette/TestOutput/";//bolette-ubuntu setting
-            //TODO fix local hadoop working directory bolette-ubuntu
+    public static String TOOL_OUTPUT_DIR = "/home/bolette/TestOutput/";//bolette-ubuntu setting
+            // "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/";//baj SB scape@iapetus setting
             //"/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
+            //"/home/bolette/TestOutput/";//bolette-ubuntu setting
+
+    /**
+     * Default job id used to create a job specific output directory.
+     */
     public static String DEFAULT_JOBID = "test-default-jobid";
 }
