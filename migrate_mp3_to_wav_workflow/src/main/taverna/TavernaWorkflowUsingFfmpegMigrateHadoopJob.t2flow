@@ -1,4 +1,4 @@
-<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0"><dataflow id="b3b071bb-6a05-4e22-804d-3ee6b160cfa6" role="top"><name>Taverna_Workflow_usi</name><inputPorts><port><name>hdfs_input_path</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0"><dataflow id="33b9466a-2cdb-42b5-b9a8-8a9e4b49ed1c" role="top"><name>Taverna_Workflow_usi</name><inputPorts><port><name>hdfs_input_path</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
       <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
@@ -45,17 +45,6 @@
 </net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>hdfs_output_path_2</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
-        <text>Output directory for preservation event files and other log files.</text>
-      </annotationBean>
-      <date>2014-01-30 15:13:40.77 UTC</date>
-      <creators />
-      <curationEventList />
-    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-  </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
-  <annotationAssertions>
-    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
       <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
         <text>output/test-output/MigrateMp3ToWav/</text>
       </annotationBean>
@@ -64,18 +53,18 @@
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>nfs_output_path</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
-        <text>/home/bolette/TestOutput/</text>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>Output directory for preservation event files and other log files.</text>
       </annotationBean>
-      <date>2014-01-30 15:15:12.216 UTC</date>
+      <date>2014-01-30 15:13:40.77 UTC</date>
       <creators />
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>nfs_output_path</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
       <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
@@ -86,7 +75,18 @@
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port></inputPorts><outputPorts><port><name>FfmpegMigrateHadoopJob_STDOUT</name><annotations /></port></outputPorts><processors><processor><name>FfmpegMigrateHadoopJob</name><inputPorts><port><name>hdfs_input_path</name><depth>0</depth></port><port><name>mapreduce_output_path</name><depth>0</depth></port><port><name>hdfs_output_path_2</name><depth>0</depth></port><port><name>nfs_output_path</name><depth>0</depth></port></inputPorts><outputPorts><port><name>STDOUT</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>external-tool-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class><inputMap><map from="hdfs_input_path" to="hdfs_input_path" /><map from="nfs_output_path" to="nfs_output_path" /><map from="hdfs_output_path_2" to="hdfs_output_path_2" /><map from="mapreduce_output_path" to="mapreduce_output_path" /></inputMap><outputMap><map from="STDOUT" to="STDOUT" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>/home/bolette/TestOutput/</text>
+      </annotationBean>
+      <date>2014-01-30 15:15:12.216 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port></inputPorts><outputPorts><port><name>FfmpegMigrateHadoopJob_STDOUT</name><annotations /></port><port><name>FfmpegMigrateHadoopJob_STDERR</name><annotations /></port></outputPorts><processors><processor><name>FfmpegMigrateHadoopJob</name><inputPorts><port><name>hdfs_input_path</name><depth>0</depth></port><port><name>mapreduce_output_path</name><depth>0</depth></port><port><name>hdfs_output_path_2</name><depth>0</depth></port><port><name>nfs_output_path</name><depth>0</depth></port></inputPorts><outputPorts><port><name>STDOUT</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>STDERR</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>external-tool-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class><inputMap><map from="hdfs_input_path" to="hdfs_input_path" /><map from="mapreduce_output_path" to="mapreduce_output_path" /><map from="hdfs_output_path_2" to="hdfs_output_path_2" /><map from="nfs_output_path" to="nfs_output_path" /></inputMap><outputMap><map from="STDERR" to="STDERR" /><map from="STDOUT" to="STDOUT" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
   <mechanismType>789663B8-DA91-428A-9F7D-B3F3DA185FD4</mechanismType>
   <mechanismName>default local</mechanismName>
   <mechanismXML>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xD;
@@ -97,7 +97,7 @@
     <usecaseid />
     <description />
     <command># Configure
-FfmpegMigrate_JAR_PATH=/home/bolette/Projects/scape-audio-qa/target/migrate_mp3_to_wav_hadoop-0.1-SNAPSHOT-jar-with-dependencies.jar
+FfmpegMigrate_JAR_PATH=/home/bolette/Projects/scape-audio-qa/migrate_mp3_to_wav_hadoop/target/migrate_mp3_to_wav_hadoop-0.1-SNAPSHOT-jar-with-dependencies.jar
 # Hadoop job
 hadoop jar ${FfmpegMigrate_JAR_PATH} eu.scape_project.audio_qa.ffmpeg_migrate.FfmpegMigrate %%hdfs_input_path%% %%mapreduce_output_path%% %%hdfs_output_path_2%% %%nfs_output_path%%</command>
     <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
@@ -128,9 +128,9 @@ hadoop jar ${FfmpegMigrate_JAR_PATH} eu.scape_project.audio_qa.ffmpeg_migrate.Ff
         </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
       </entry>
       <entry>
-        <string>nfs_output_path</string>
+        <string>hdfs_output_path_2</string>
         <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-          <tag>nfs_output_path</tag>
+          <tag>hdfs_output_path_2</tag>
           <file>false</file>
           <tempFile>false</tempFile>
           <binary>false</binary>
@@ -156,9 +156,9 @@ hadoop jar ${FfmpegMigrate_JAR_PATH} eu.scape_project.audio_qa.ffmpeg_migrate.Ff
         </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
       </entry>
       <entry>
-        <string>hdfs_output_path_2</string>
+        <string>nfs_output_path</string>
         <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-          <tag>hdfs_output_path_2</tag>
+          <tag>nfs_output_path</tag>
           <file>false</file>
           <tempFile>false</tempFile>
           <binary>false</binary>
@@ -186,24 +186,24 @@ hadoop jar ${FfmpegMigrate_JAR_PATH} eu.scape_project.audio_qa.ffmpeg_migrate.Ff
   <initialDelay>1000</initialDelay>
   <maxDelay>5000</maxDelay>
   <maxRetries>0</maxRetries>
-</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="hdfs_input_path" depth="0" /><port name="mapreduce_output_path" depth="0" /><port name="hdfs_output_path_2" depth="0" /><port name="nfs_output_path" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor></processors><conditions /><datalinks><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>hdfs_input_path</port></sink><source type="dataflow"><port>hdfs_input_path</port></source></datalink><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>mapreduce_output_path</port></sink><source type="dataflow"><port>mapreduce_output_path</port></source></datalink><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>hdfs_output_path_2</port></sink><source type="dataflow"><port>hdfs_output_path_2</port></source></datalink><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>nfs_output_path</port></sink><source type="dataflow"><port>nfs_output_path</port></source></datalink><datalink><sink type="dataflow"><port>FfmpegMigrateHadoopJob_STDOUT</port></sink><source type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>STDOUT</port></source></datalink></datalinks><annotations><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="hdfs_input_path" depth="0" /><port name="mapreduce_output_path" depth="0" /><port name="hdfs_output_path_2" depth="0" /><port name="nfs_output_path" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor></processors><conditions /><datalinks><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>hdfs_input_path</port></sink><source type="dataflow"><port>hdfs_input_path</port></source></datalink><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>mapreduce_output_path</port></sink><source type="dataflow"><port>mapreduce_output_path</port></source></datalink><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>hdfs_output_path_2</port></sink><source type="dataflow"><port>hdfs_output_path_2</port></source></datalink><datalink><sink type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>nfs_output_path</port></sink><source type="dataflow"><port>nfs_output_path</port></source></datalink><datalink><sink type="dataflow"><port>FfmpegMigrateHadoopJob_STDOUT</port></sink><source type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>STDOUT</port></source></datalink><datalink><sink type="dataflow"><port>FfmpegMigrateHadoopJob_STDERR</port></sink><source type="processor"><processor>FfmpegMigrateHadoopJob</processor><port>STDERR</port></source></datalink></datalinks><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
-        <identification>1ef352ba-0251-4ab0-8d2e-901142ac08f3</identification>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.Author">
+        <text>Bolette A. Jurik, Statsbiblioteket &amp; SCAPE</text>
       </annotationBean>
-      <date>2014-01-14 10:21:04.29 UTC</date>
+      <date>2014-01-14 10:46:02.398 UTC</date>
       <creators />
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
       <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
-        <identification>75d877e4-d973-43fd-aee8-013f9724f918</identification>
+        <identification>33b9466a-2cdb-42b5-b9a8-8a9e4b49ed1c</identification>
       </annotationBean>
-      <date>2014-01-14 10:47:27.703 UTC</date>
+      <date>2014-01-31 07:56:06.362 UTC</date>
       <creators />
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
@@ -241,15 +241,37 @@ hadoop jar ${FfmpegMigrate_JAR_PATH} eu.scape_project.audio_qa.ffmpeg_migrate.Ff
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.Author">
-        <text>Bolette A. Jurik, Statsbiblioteket &amp; SCAPE</text>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>3629a1cb-67ca-4ccf-b3ae-960c6f29543d</identification>
       </annotationBean>
-      <date>2014-01-14 10:46:02.398 UTC</date>
+      <date>2014-01-30 15:19:13.424 UTC</date>
       <creators />
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   </annotationAssertions>
-</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></dataflow></workflow>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>1ef352ba-0251-4ab0-8d2e-901142ac08f3</identification>
+      </annotationBean>
+      <date>2014-01-14 10:21:04.29 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>75d877e4-d973-43fd-aee8-013f9724f918</identification>
+      </annotationBean>
+      <date>2014-01-14 10:47:27.703 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2></annotations></dataflow></workflow>

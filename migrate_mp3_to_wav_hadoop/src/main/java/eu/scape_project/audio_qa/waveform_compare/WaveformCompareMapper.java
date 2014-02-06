@@ -31,31 +31,23 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
     private Log log = new Log4JLogger("WaveformCompareMapper Log");
 
     @Override
-    protected void map(LongWritable lineNo, Text inputMp3path, Context context) throws IOException, InterruptedException {
+    protected void map(LongWritable lineNo, Text wavfilepathpair, Context context) throws IOException, InterruptedException {
 
-        if (inputMp3path.toString().equals("")) {
+        if (wavfilepathpair.toString().equals("")) {
             log.info("empty input line");
             System.out.println("empty input line");
             return;
         }
 
         //get input wavs
-        String[] inputSplit = inputMp3path.toString().split("[ \\t\\n\\x0B\\f\\r]");//splits on whitespace
+        String[] inputSplit = wavfilepathpair.toString().split("[ \\t\\n\\x0B\\f\\r]");//splits on whitespace
         if (inputSplit.length<2) {
-            log.info("input line not formatted correctly:\n" + inputMp3path.toString());
+            log.info("input line not formatted correctly:\n" + wavfilepathpair.toString());
             return;
         }
         String inputWav1 = inputSplit[0];
         String inputWav2 = inputSplit[inputSplit.length-1];
 
-        //create output file
-        int i = 1;
-        while (inputWav1.startsWith(inputWav2.substring(0,i))) i++;
-        String outputFileName = inputWav1;
-        if (i>1) outputFileName = inputWav1.substring(0, i-1);
-        String[] outputFileNameTMpSplit = outputFileName.split(AudioQASettings.SLASH);
-        outputFileName = outputFileNameTMpSplit[outputFileNameTMpSplit.length-1];
-        outputFileName = outputFileName + AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG;
         //create a hadoop-job-specific output dir
         String outputDirPath;
         if (context.getJobID()==null) {
@@ -65,10 +57,16 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
             outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
                     context.getJobID().toString();
         }
-        String logFilePath = outputDirPath + AudioQASettings.SLASH + outputFileName;
+        //create output log file
+        String[] inputWav1Split = inputWav1.split(AudioQASettings.SLASH);
+        String inputWav1Name = inputWav1Split.length > 0 ? inputWav1Split[inputWav1Split.length - 1] : inputWav1;
+        String[] inputWav1NameSplit = inputWav1Name.split("\\.");
+        String logFileName = inputWav1NameSplit.length > 0 ? inputWav1NameSplit[0] : inputWav1Name;
+        String logFilePath = outputDirPath + AudioQASettings.SLASH + logFileName +
+                AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG;
         //logFile.setReadable(true, false);
         //logFile.setWritable(true, false);
-        Text output = new Text(outputFileName);
+        Text output = new Text(logFilePath);
 
         FileSystem fs = FileSystem.get(context.getConfiguration());
         boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
