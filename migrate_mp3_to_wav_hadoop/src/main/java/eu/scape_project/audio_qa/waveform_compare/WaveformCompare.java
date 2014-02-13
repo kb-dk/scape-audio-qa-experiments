@@ -49,6 +49,8 @@ public class WaveformCompare extends Configured implements Tool {
             SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
         if (n > 2)
             configuration.set("map.outputdir", args[2]);
+        if (n > 3)
+            configuration.set("tool.outputdir", args[3]);
 
         job.setMapperClass(WaveformCompareMapper.class);
         job.setReducerClass(WaveformCompareReducer.class);

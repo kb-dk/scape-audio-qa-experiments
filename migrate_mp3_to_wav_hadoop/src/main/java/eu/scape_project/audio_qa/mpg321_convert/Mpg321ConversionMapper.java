@@ -33,23 +33,32 @@ public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWrita
 
         if (inputMp3path.toString().equals("")) return;
 
-        //create a file-specific output dir on hdfs
+        //get input mp3 name
         String[] inputSplit = inputMp3path.toString().split("/");
         String inputMp3 = inputSplit.length > 0 ? inputSplit[inputSplit.length - 1] : inputMp3path.toString();
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        String outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) + inputMp3Name;
+        //create a hadoop-job-specific output dir on hdfs
+        String outputDirPath;
+        if (context.getJobID()==null) {
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
+                    context.getConfiguration().get("job.jobID", AudioQASettings.DEFAULT_JOBID);
+        } else {
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
+                    context.getJobID().toString();
+        }
         FileSystem fs = FileSystem.get(context.getConfiguration());
-        boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
-        log.debug(outputDirPath + "\n" + succesfull);
+        boolean succesfull = fs.mkdirs(new Path(outputDirPath));
+        log.debug(outputDirPath + "\nfs.mkdirs " + succesfull);
 
         //convert with mpg321
         String mpg321log = outputDirPath + AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTLOG;
         String[] mpg321command = new String[4];
         mpg321command[0] = AudioQASettings.MPG321;
         mpg321command[1] = "-w";
-        String outputwavPath = AudioQASettings.TOOL_OUTPUT_DIR + AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTWAV;
+        String outputwavPath = context.getConfiguration().get("tool.outputdir", AudioQASettings.TOOL_OUTPUT_DIR) +
+                AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTWAV;
         mpg321command[2] = outputwavPath;
         mpg321command[3] = inputMp3path.toString();
         int exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log, fs);

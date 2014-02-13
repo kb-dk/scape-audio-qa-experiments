@@ -33,19 +33,24 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
 
         if (inputMp3path.toString().equals("")) return;
 
-        //create a file-specific output dir on hdfs
+        //get input mp3 name
         String[] inputSplit = inputMp3path.toString().split("/");
         String inputMp3 = inputSplit.length > 0 ? inputSplit[inputSplit.length - 1] : inputMp3path.toString();
         String[] inputMp3Split = inputMp3.split("\\.");
         String inputMp3Name = inputMp3Split.length > 0 ? inputMp3Split[0] : inputMp3;
 
-        String outputDirPath = context.getConfiguration().get("map.outputdir",
-                AudioQASettings.MAPPER_OUTPUT_DIR) + inputMp3Name;
-
+        //create a hadoop-job-specific output dir on hdfs
+        String outputDirPath;
+        if (context.getJobID()==null) {
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
+                    context.getConfiguration().get("job.jobID", AudioQASettings.DEFAULT_JOBID);
+        } else {
+            outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
+                    context.getJobID().toString();
+        }
         FileSystem fs = FileSystem.get(context.getConfiguration());
         boolean succesfull = fs.mkdirs(new Path(outputDirPath));
-        log.debug("fs.mkdirs() successfull = " + succesfull);
-        System.out.println("outputDir.mkdirs() successfull = " + succesfull);
+        log.debug(outputDirPath + "\nfs.mkdirs " + succesfull);
 
         //migrate with ffmpeg
         String ffmpeglog = outputDirPath + "/" + inputMp3 + "_ffmpeg.log";
@@ -54,16 +59,13 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         ffmpegcommand[1] = "-y";
         ffmpegcommand[2] = "-i";
         ffmpegcommand[3] = inputMp3path.toString();
-        String outputwavString = AudioQASettings.TOOL_OUTPUT_DIR + "/" + inputMp3 + "_ffmpeg.wav";
-        //File outputwav = new File(outputDirPath + "/", inputMp3 + "_ffmpeg.wav");
-        //outputwav.setReadable(true, false);
-        //outputwav.setWritable(true, false);
-        ffmpegcommand[4] = outputwavString;
+        String outputwavPath = context.getConfiguration().get("tool.outputdir", AudioQASettings.TOOL_OUTPUT_DIR) +
+                AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + "ffmpeg" + AudioQASettings.DOTWAV;
+        ffmpegcommand[4] = outputwavPath;
         int exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog, fs);
         //Note ffmpeg will not overwrite earlier results when we do not explicitly allow it!
-        //The ffmpeg log on HDFS will be overwritten!
 
-        context.write(new LongWritable(exitCode), new Text(outputwavString));
+        context.write(new LongWritable(exitCode), new Text(outputwavPath));
     }
 
 }

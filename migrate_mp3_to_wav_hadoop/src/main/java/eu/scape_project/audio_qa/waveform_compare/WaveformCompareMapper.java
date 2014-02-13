@@ -57,6 +57,10 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
             outputDirPath = context.getConfiguration().get("map.outputdir", AudioQASettings.MAPPER_OUTPUT_DIR) +
                     context.getJobID().toString();
         }
+        FileSystem fs = FileSystem.get(context.getConfiguration());
+        boolean succesfull = fs.mkdirs(new Path(outputDirPath));
+        log.debug(outputDirPath + "\nfs.mkdirs " + succesfull);
+
         //create output log file
         String[] inputWav1Split = inputWav1.split(AudioQASettings.SLASH);
         String inputWav1Name = inputWav1Split.length > 0 ? inputWav1Split[inputWav1Split.length - 1] : inputWav1;
@@ -64,16 +68,7 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
         String logFileName = inputWav1NameSplit.length > 0 ? inputWav1NameSplit[0] : inputWav1Name;
         String logFilePath = outputDirPath + AudioQASettings.SLASH + logFileName +
                 AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG;
-        //logFile.setReadable(true, false);
-        //logFile.setWritable(true, false);
         Text output = new Text(logFilePath);
-
-        FileSystem fs = FileSystem.get(context.getConfiguration());
-        boolean succesfull = fs.mkdirs(new Path(outputDirPath));//todo permissions (+ absolute path?)
-        //outputDir.mkdirs();
-        //outputDir.setReadable(true, false);
-        //outputDir.setWritable(true, false);
-        log.debug(outputDirPath);
 
         //compare wav file content with waveform-compare
         String[] wavCompareCommand = new String[3];

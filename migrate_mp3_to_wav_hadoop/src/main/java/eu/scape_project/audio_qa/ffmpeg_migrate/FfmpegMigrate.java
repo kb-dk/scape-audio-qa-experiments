@@ -48,6 +48,8 @@ public class FfmpegMigrate  extends Configured implements Tool {
             SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
         if (n > 2)
             configuration.set("map.outputdir", args[2]);
+        if (n > 3)
+            configuration.set("tool.outputdir", args[3]);
 
         job.setMapperClass(FfmpegMigrationMapper.class);
         job.setReducerClass(FfmpegMigrationReducer.class);
@@ -59,6 +61,9 @@ public class FfmpegMigrate  extends Configured implements Tool {
         job.setOutputValueClass(Text.class);
 
         job.setNumReduceTasks(1);
+
+        if (job.getJobID()==null) {configuration.set("job.jobID", "FfmpegMigrate" + Math.random());}
+
         return job.waitForCompletion(true) ? 0 : -1;
     }
 
