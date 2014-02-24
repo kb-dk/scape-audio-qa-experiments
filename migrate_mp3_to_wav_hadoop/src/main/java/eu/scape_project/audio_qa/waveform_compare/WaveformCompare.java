@@ -28,11 +28,21 @@ public class WaveformCompare extends Configured implements Tool {
         @Override
         protected void reduce(LongWritable exitCode, Iterable<Text> outputs, Context context)
                 throws IOException, InterruptedException {
-            Text list = new Text("");
+            int success = 0;
+            int failure = 0;
+            Text summary = new Text("");
             for (Text output : outputs) {
-                list = new Text(list.toString() + output.toString() + "\n");
+                if (output.toString().contains("Success")) {
+                    success++;
+                }
+                else if (output.toString().contains("Failure")) {
+                    failure++;
+                } else {
+                    summary.set(summary.toString() + output.toString() + "\n");//TODO log instead
+                }
             }
-            context.write(exitCode, list);
+            summary.set(summary.toString() + "Success " + success + "\nFailure " + failure);
+            context.write(exitCode, summary);
         }
     }
 

@@ -62,7 +62,7 @@ public class FfmpegMigrationMapper extends Mapper<LongWritable, Text, LongWritab
         String outputwavPath = context.getConfiguration().get("tool.outputdir", AudioQASettings.TOOL_OUTPUT_DIR) +
                 AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + "ffmpeg" + AudioQASettings.DOTWAV;
         ffmpegcommand[4] = outputwavPath;
-        int exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog, fs);
+        int exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog, fs, new Text());
         //Note ffmpeg will not overwrite earlier results when we do not explicitly allow it!
 
         context.write(new LongWritable(exitCode), new Text(outputwavPath));

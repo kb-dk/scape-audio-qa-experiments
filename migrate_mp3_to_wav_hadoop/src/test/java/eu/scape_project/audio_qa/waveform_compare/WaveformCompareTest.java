@@ -28,9 +28,11 @@ public class WaveformCompareTest {
     Text inputText = new Text("output/MigrateMp3ToWav/freestylemix_-_hisboyelroy_-_Revolve/" +
             "freestylemix_-_hisboyelroy_-_Revolve.mp3_ffmpeg.wav    output/MigrateMp3ToWav/" +
             "freestylemix_-_hisboyelroy_-_Revolve/freestylemix_-_hisboyelroy_-_Revolve.mp3_mpg321.wav");
-    Text outputText = new Text("output/MigrateMp3ToWav/" + AudioQASettings.DEFAULT_JOBID +
-            AudioQASettings.SLASH + "freestylemix_-_hisboyelroy_-_Revolve" +
-            AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG);
+    Text outputText = new Text("Success 1\n" +
+            "Failure 0");
+            //new Text("output/MigrateMp3ToWav/" + AudioQASettings.DEFAULT_JOBID +
+            //AudioQASettings.SLASH + "freestylemix_-_hisboyelroy_-_Revolve" +
+            //AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG);
 
     @Before
     public void setUp() {
@@ -49,24 +51,27 @@ public class WaveformCompareTest {
     @Test
     public void testMapper() throws IOException {
         mapDriver.withInput(new LongWritable(0), inputText);
-        mapDriver.withOutput(new LongWritable(0), outputText);
+        Text mapperOutputText = new Text("Success\n" +
+                "Offset: -1152\n" +
+                "Similarity: 0.999863\n");
+        mapDriver.withOutput(new LongWritable(0), mapperOutputText);
         mapDriver.runTest();
     }
 
     @Test
     public void testReducer() throws IOException {
         List<Text> values = new ArrayList<Text>();
-        values.add(outputText);
+        values.add(inputText);
         //TODO test multiple values
         reduceDriver.withInput(new LongWritable(0), values);
-        reduceDriver.withOutput(new LongWritable(0), new Text(outputText.toString()+"\n"));
+        reduceDriver.withOutput(new LongWritable(0), outputText);
         reduceDriver.runTest();
     }
 
     @Test
     public void testMapReduce() throws IOException {
         mapReduceDriver.withInput(new LongWritable(0), inputText);
-        mapReduceDriver.addOutput(new LongWritable(0), new Text(outputText.toString()+"\n"));
+        mapReduceDriver.addOutput(new LongWritable(0), outputText);
         mapReduceDriver.runTest();
     }
 }

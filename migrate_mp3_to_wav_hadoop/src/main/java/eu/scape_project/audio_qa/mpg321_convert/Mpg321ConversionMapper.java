@@ -61,7 +61,7 @@ public class Mpg321ConversionMapper extends Mapper<LongWritable, Text, LongWrita
                 AudioQASettings.SLASH + inputMp3 + AudioQASettings.UNDERSCORE + AudioQASettings.MPG321 + AudioQASettings.DOTWAV;
         mpg321command[2] = outputwavPath;
         mpg321command[3] = inputMp3path.toString();
-        int exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log, fs);
+        int exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log, fs, new Text());
 
         context.write(new LongWritable(exitCode), new Text(outputwavPath));
     }

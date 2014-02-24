@@ -65,7 +65,7 @@ public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
         ffprobeCommand[0] = "ffprobe";
         ffprobeCommand[1] = migratedWavPath;
         FileSystem fs = FileSystem.get(context.getConfiguration());
-        int exitCode = CLIToolRunner.runCLItool(ffprobeCommand, wavFfprobeLogFileString, fs);
+        int exitCode = CLIToolRunner.runCLItool(ffprobeCommand, wavFfprobeLogFileString, fs, new Text());
         File outputFile = new File(wavFfprobeLogFileString);
         outputFile.setReadable(true, false);
         outputFile.setWritable(true, false);
@@ -99,7 +99,7 @@ public class QAMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
             mpg321command[2] = outputwav.getAbsolutePath();
             mpg321command[3] = inputMp3path.toString();
             System.out.println(Arrays.toString(mpg321command));
-            exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log, fs);
+            exitCode = CLIToolRunner.runCLItool(mpg321command, mpg321log, fs, new Text());
         }
 
         //TODO run xcorrSound waveform-compare to compare the migrated wav and the converted comparison wav

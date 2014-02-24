@@ -4,6 +4,7 @@ import eu.scape_project.audio_qa.AudioQASettings;
 import eu.scape_project.audio_qa.CLIToolRunner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -68,16 +69,16 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
         String logFileName = inputWav1NameSplit.length > 0 ? inputWav1NameSplit[0] : inputWav1Name;
         String logFilePath = outputDirPath + AudioQASettings.SLASH + logFileName +
                 AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG;
-        Text output = new Text(logFilePath);
 
         //compare wav file content with waveform-compare
         String[] wavCompareCommand = new String[3];
         wavCompareCommand[0] = "waveform-compare";
         wavCompareCommand[1] = inputWav1;
         wavCompareCommand[2] = inputWav2;
-        int exitCode = CLIToolRunner.runCLItool(wavCompareCommand, logFilePath, fs);
+        Text mrOutput = new Text();
+        int exitCode = CLIToolRunner.runCLItool(wavCompareCommand, logFilePath, fs, mrOutput);
 
-        context.write(new LongWritable(exitCode), output);
+        context.write(new LongWritable(exitCode), mrOutput);
     }
 
 }

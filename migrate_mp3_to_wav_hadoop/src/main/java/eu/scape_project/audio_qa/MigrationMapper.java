@@ -51,7 +51,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Te
         String [] ffprobeCommand = new String[2];
         ffprobeCommand[0] = "ffprobe";
         ffprobeCommand[1] = inputMp3path.toString();
-        int exitCode = CLIToolRunner.runCLItool(ffprobeCommand, outputFileString, fs);
+        int exitCode = CLIToolRunner.runCLItool(ffprobeCommand, outputFileString, fs, new Text());
         File outputFile = new File(outputFileString);
         outputFile.setReadable(true, false);
         outputFile.setWritable(true, false);
@@ -71,7 +71,7 @@ public class MigrationMapper extends Mapper<LongWritable, Text, LongWritable, Te
             //outputwav.setReadable(true, false);
             //outputwav.setWritable(true, false);
             ffmpegcommand[4] = outputwavPath;
-            exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog, fs);
+            exitCode = CLIToolRunner.runCLItool(ffmpegcommand, ffmpeglog, fs, new Text());
         }
 
         context.write(new LongWritable(exitCode), output);
