@@ -61,7 +61,9 @@ public class WaveformCompareTest {
     @Test
     public void testReducer() throws IOException {
         List<Text> values = new ArrayList<Text>();
-        values.add(inputText);
+        values.add(new Text("Success\n" +
+                "Offset: -1152\n" +
+                "Similarity: 0.999863\n"));
         //TODO test multiple values
         reduceDriver.withInput(new LongWritable(0), values);
         reduceDriver.withOutput(new LongWritable(0), outputText);
