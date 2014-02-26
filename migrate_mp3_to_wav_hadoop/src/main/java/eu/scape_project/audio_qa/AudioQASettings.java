@@ -21,12 +21,9 @@ public class AudioQASettings {
      * Default workflow output directories on HDFS and NFS.
      * TODO put all results on NFS
      */
-    public static String MAPPER_OUTPUT_DIR = "hdfs:///user/bolette/output/test-output/MigrateMp3ToWav/";//bolette-ubuntu setting
-            //"baj/out/";//baj SB Hadoop cluster setting
+    public static String MAPPER_OUTPUT_DIR = "baj/out/";//baj SB Hadoop cluster setting
             //"hdfs:///user/bolette/output/test-output/MigrateMp3ToWav/";//bolette-ubuntu setting
-    public static String TOOL_OUTPUT_DIR = "/home/bolette/TestOutput/";//bolette-ubuntu setting
-            // "/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/";//baj SB scape@iapetus setting
-            //"/net/zone1.isilon.sblokalnet/ifs/data/hdfs/user/scape/mapred-write/test-output/MigrateMp3ToWav/";
+    public static String TOOL_OUTPUT_DIR = "/scape/shared/out/wav/";//baj SB scape@iapetus setting
             //"/home/bolette/TestOutput/";//bolette-ubuntu setting
 
     /**
