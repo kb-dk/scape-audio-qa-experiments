@@ -13,6 +13,30 @@ which all perform exactly one task. And
   * QAMapper, which does the ffprobe characterisation of the migrated wav file, the property comparison,
   the mpg321 conversion, and the waveform-compare.
 
+More about these later.
+
+The module also contains a number of Taverna workflows using these Hadoop jobs.
+
+* TavernaWorkflowUsingFfmpegMigrateHadoopJob.t2flow
+* TavernaWorkflowUsingMpg321ConvertHadoopJob.t2flow
+* TavernaWorkflowUsingWaveformCompareHadoopJob.t2flow
+
+and
+
+* SlimMigrateAndQAmp3toWavUsingHadoopJobs.t2flow, which combines the three above jobs to do migration, conversion
+and content comparison
+
+The commandline to run the workflow looks something like this:
+
+~/tools/taverna-commandline-2.4.0/executeworkflow.sh SlimMigrateAndQAmp3toWavUsingHadoopJobs.t2flow -inmemory
+-inputvalue mapreduce_output_path baj/out/exp-140216-01
+-inputvalue jar_input_path /scape/shared/jars/
+-inputvalue mp3_list_on_hdfs_input_path baj/data/mp3-file-list-medium.txt
+-inputvalue hdfs_output_path_2 baj/out/exp-140216
+-inputvalue nfs_output_path /scape/shared/out/wav/
+-inputvalue max_split_size 256
+-logfile log.txt
+
 ## Ffmpeg Migration
 
 The input to this job is a list of mp3 file paths to mp3 files on NFS. The text file with
