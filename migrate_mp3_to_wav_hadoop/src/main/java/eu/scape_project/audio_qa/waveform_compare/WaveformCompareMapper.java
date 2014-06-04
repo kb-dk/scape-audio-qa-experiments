@@ -21,7 +21,7 @@ import java.util.Arrays;
  *
  * The input is a line number as key (not used) and a Text line, which we assume is two tab-separated path to two
  * wav files to be compared.
- * The output is an exit code, and todo the output of the waveform-compare tool (now path to log file).
+ * The output is an exit code, and the output of the waveform-compare tool (used to be path to log file).
  *
  * eu.scape_project.audio_qa.mpg321_convert
  * User: baj@statsbiblioteket.dk
@@ -71,10 +71,12 @@ public class WaveformCompareMapper extends Mapper<LongWritable, Text, LongWritab
                 AudioQASettings.UNDERSCORE + "compare" + AudioQASettings.DOTLOG;
 
         //compare wav file content with waveform-compare
-        String[] wavCompareCommand = new String[3];
+        String[] wavCompareCommand = new String[5];
         wavCompareCommand[0] = "waveform-compare";
-        wavCompareCommand[1] = inputWav1;
-        wavCompareCommand[2] = inputWav2;
+        wavCompareCommand[1] = "--block-size=5";
+        wavCompareCommand[2] = "--threshold=0.98";
+        wavCompareCommand[3] = inputWav1;
+        wavCompareCommand[4] = inputWav2;
         Text mrOutput = new Text();
         int exitCode = CLIToolRunner.runCLItool(wavCompareCommand, logFilePath, fs, mrOutput);
 
